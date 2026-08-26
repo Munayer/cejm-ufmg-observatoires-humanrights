@@ -21,7 +21,10 @@ refatoração.)*
    destaque do valor de MG; a lista completa (Brasil + 27 estados) fica
    dentro de um `<details>` recolhido — "Ver Minas Gerais ao lado do Brasil
    e das demais unidades da federação".
-2. **Menu de Temáticas.** Três abas substituem a página única:
+2. **Menu de Temáticas.** Uma barra lateral fixa (outline, inspirada na
+   fluidez de navegação do Logseq — expandir/colapsar por transição de
+   grade, sem JS medindo altura) substitui a página única. Três
+   temáticas:
    - **Execução Penal** — implementada, com os três indicadores que já
      existiam (taxa de ocupação, déficit de vagas, cobertura de informação).
    - **Direitos Humanos no Meio Ambiente Urbano** — `candidato`: sem fonte

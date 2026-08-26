@@ -430,38 +430,81 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
    repositório real, mesclar aqui dentro de dashboard/estilo.css.
    ============================================================ */
 
-.barra-temas{
-  margin:1.8rem 0 0;
-  border-bottom:2px solid var(--fio-forte);
-  overflow-x:auto;
+/* app-shell: barra lateral fixa (Temáticas) + coluna de conteúdo, no
+   lugar do menu superior de abas. Inspirado na fluidez de navegação em
+   outline do Logseq — cor e tipografia continuam as do padrão
+   institucional, só a interação de expandir/colapsar e trocar de
+   temática é que ganhou movimento. */
+
+body{padding-top:0}
+
+.shell{
+  max-width:var(--medida);
+  margin:0 auto;
+  display:flex;
+  align-items:flex-start;
 }
-.barra-temas-interna{display:flex;gap:0}
-.tab-tema{
-  font-family:var(--sans);
-  font-size:.8rem;
-  font-weight:600;
-  color:var(--discreto);
-  background:none;
-  border:none;
-  border-bottom:3px solid transparent;
-  padding:.85rem 1.2rem;
-  cursor:pointer;
-  white-space:nowrap;
+
+.sidebar{
+  flex:0 0 14.5rem;
+  border-right:1px solid var(--fio);
+  padding:1.6rem 0;
+  position:sticky;
+  top:0;
+  align-self:flex-start;
+  max-height:100vh;
+  overflow-y:auto;
 }
-.tab-tema:hover{color:var(--azul-escuro)}
-.tab-tema[aria-selected="true"]{color:var(--azul-escuro);border-bottom-color:var(--azul)}
-.tab-tema .rotulo-status{
-  display:inline-block;
-  margin-left:.45rem;
-  font-size:.6rem;
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  color:var(--discreto);
-  background:var(--barra-fundo);
-  padding:.1rem .4rem;
+.sidebar .marca{
+  font-size:.86rem;font-weight:700;color:var(--azul-escuro);
+  padding:0 1.2rem 1.1rem;letter-spacing:.01em;
 }
-.tab-tema[aria-selected="true"] .rotulo-status{color:var(--azul-escuro)}
+.sidebar .busca{position:relative;margin:0 1.2rem 1.2rem}
+
+.tema{border-left:3px solid transparent}
+.tema.ativo{border-left-color:var(--dourado)}
+.tema-cabecalho{
+  display:flex;align-items:center;gap:.5rem;width:100%;
+  margin:0;padding:.6rem 1.2rem;border:none;background:none;
+  font-family:var(--sans);text-align:left;cursor:pointer;
+  transition:background .15s ease;
+}
+.tema-cabecalho:hover{background:var(--azul-claro)}
+.tema.ativo .tema-cabecalho{font-weight:700;color:var(--azul-escuro)}
+.tema:not(.ativo) .tema-cabecalho{color:var(--discreto)}
+.seta{font-size:.62rem;color:var(--discreto);transition:transform .2s ease;flex:0 0 auto}
+.tema.aberto .seta{transform:rotate(90deg)}
+.tema-titulo{flex:1 1 auto;font-size:.84rem;line-height:1.3}
+.selo-tema{
+  font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--discreto);background:var(--fundo);border:1px solid var(--fio);
+  padding:.05rem .35rem;flex:0 0 auto;
+}
+.tema.ativo .selo-tema{color:var(--azul-escuro);border-color:var(--azul-claro);background:var(--azul-claro)}
+
+/* grid-template-rows 0fr/1fr: colapso e expansão fluidos, sem JS medindo altura */
+.subitens-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease}
+.tema.aberto .subitens-wrap{grid-template-rows:1fr}
+.subitens{overflow:hidden}
+.subitens ul{list-style:none;margin:0;padding:.2rem 0 .8rem 2.5rem}
+.subitens li a{
+  display:block;padding:.32rem 0;font-size:.8rem;color:var(--discreto);
+  text-decoration:none;border-left:1px solid var(--fio);padding-left:.8rem;
+  margin-left:-.01rem;transition:color .15s ease,border-color .15s ease;
+}
+.subitens li a:hover{color:var(--azul);border-left-color:var(--azul)}
+
+.conteudo-principal{flex:1 1 auto;min-width:0;padding:0 1.5rem 6rem}
+.conteudo-principal header{margin-top:0}
+
+@media (max-width:720px){
+  .shell{flex-direction:column}
+  .sidebar{
+    position:static;max-height:none;width:100%;flex:1 1 auto;
+    border-right:none;border-bottom:2px solid var(--fio-forte);
+    padding:1rem 0;
+  }
+}
 
 .tema-painel[hidden]{display:none}
 
@@ -535,7 +578,9 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
 .card-vazio strong{color:var(--tinta)}
 
 @media print{
-  .barra-temas{display:none}
+  .sidebar{display:none}
+  .shell{display:block}
+  .conteudo-principal{max-width:none;padding:0}
   .tema-painel[hidden]{display:block !important}
   details.ver-todos{display:block}
   details.ver-todos > summary{display:none}
@@ -543,18 +588,69 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
 </style>
 </head>
 <body>
-<div class="folha">
+<div class="shell">
 
-  <nav class="barra-menu">
-    <div class="barra-interna">
-      <span class="marca">BR-MG-ObservatoriumHumanitarium</span>
-      <div class="busca">
-        <input type="text" id="campo-busca" placeholder="Buscar indicador, dever, fonte…"
-               autocomplete="off" aria-label="Buscar no painel">
-        <div id="resultados-busca" class="resultados-busca" hidden></div>
-      </div>
+  <nav class="sidebar" aria-label="Temáticas">
+    <div class="marca">BR-MG-ObservatoriumHumanitarium</div>
+    <div class="busca">
+      <input type="text" id="campo-busca" placeholder="Buscar indicador, dever, fonte…"
+             autocomplete="off" aria-label="Buscar no painel">
+      <div id="resultados-busca" class="resultados-busca" hidden></div>
+    </div>
+
+    <div class="tema ativo aberto" data-tema="tema-execucao-penal">
+      <button type="button" class="tema-cabecalho" data-tema="tema-execucao-penal">
+        <span class="seta">▸</span>
+        <span class="tema-titulo">Execução Penal</span>
+        <span class="selo-tema">implementado</span>
+      </button>
+      <div class="subitens-wrap"><div class="subitens">
+        <ul>
+          <li><a href="#objeto-execucao-penal" data-tema="tema-execucao-penal">Objeto</a></li>
+          <li><a href="#ressalvas-execucao-penal" data-tema="tema-execucao-penal">Ressalvas</a></li>
+          <li><a href="#indicadores-execucao-penal" data-tema="tema-execucao-penal">Indicadores</a></li>
+          <li><a href="#fontes-execucao-penal" data-tema="tema-execucao-penal">Fontes</a></li>
+          <li><a href="#evidencia-execucao-penal" data-tema="tema-execucao-penal">Evidência</a></li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="tema" data-tema="tema-ambiente-urbano">
+      <button type="button" class="tema-cabecalho" data-tema="tema-ambiente-urbano">
+        <span class="seta">▸</span>
+        <span class="tema-titulo">Direitos Humanos no Meio Ambiente Urbano</span>
+        <span class="selo-tema">candidato</span>
+      </button>
+      <div class="subitens-wrap"><div class="subitens">
+        <ul>
+          <li><a href="#objeto-ambiente-urbano" data-tema="tema-ambiente-urbano">Objeto</a></li>
+          <li><a href="#ressalvas-ambiente-urbano" data-tema="tema-ambiente-urbano">Ressalvas</a></li>
+          <li><a href="#indicadores-ambiente-urbano" data-tema="tema-ambiente-urbano">Indicadores</a></li>
+          <li><a href="#fontes-ambiente-urbano" data-tema="tema-ambiente-urbano">Fontes</a></li>
+          <li><a href="#evidencia-ambiente-urbano" data-tema="tema-ambiente-urbano">Evidência</a></li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="tema" data-tema="tema-ambiente-rural">
+      <button type="button" class="tema-cabecalho" data-tema="tema-ambiente-rural">
+        <span class="seta">▸</span>
+        <span class="tema-titulo">Direitos Humanos no Meio Ambiente Rural</span>
+        <span class="selo-tema">candidato</span>
+      </button>
+      <div class="subitens-wrap"><div class="subitens">
+        <ul>
+          <li><a href="#objeto-ambiente-rural" data-tema="tema-ambiente-rural">Objeto</a></li>
+          <li><a href="#ressalvas-ambiente-rural" data-tema="tema-ambiente-rural">Ressalvas</a></li>
+          <li><a href="#indicadores-ambiente-rural" data-tema="tema-ambiente-rural">Indicadores</a></li>
+          <li><a href="#fontes-ambiente-rural" data-tema="tema-ambiente-rural">Fontes</a></li>
+          <li><a href="#evidencia-ambiente-rural" data-tema="tema-ambiente-rural">Evidência</a></li>
+        </ul>
+      </div></div>
     </div>
   </nav>
+
+  <main class="conteudo-principal">
 
   <header>
     <p class="chapeu">Minas Gerais e Sistema Interamericano de Direitos Humanos</p>
@@ -567,20 +663,6 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
       não como página geral.
     </p>
   </header>
-
-  <nav class="barra-temas" aria-label="Temáticas">
-    <div class="barra-temas-interna">
-      <button type="button" class="tab-tema" data-tema="tema-execucao-penal"
-              aria-selected="true">Execução Penal
-        <span class="rotulo-status">implementado</span></button>
-      <button type="button" class="tab-tema" data-tema="tema-ambiente-urbano"
-              aria-selected="false">Direitos Humanos no Meio Ambiente Urbano
-        <span class="rotulo-status">candidato</span></button>
-      <button type="button" class="tab-tema" data-tema="tema-ambiente-rural"
-              aria-selected="false">Direitos Humanos no Meio Ambiente Rural
-        <span class="rotulo-status">candidato</span></button>
-    </div>
-  </nav>
 
   <!-- ================================================== TEMA: EXECUÇÃO PENAL -->
   <section class="tema-painel" id="tema-execucao-penal">
@@ -797,6 +879,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
 
   </section>
 
+  </main>
 </div>
 
 <footer class="rodape-eu">
@@ -838,21 +921,27 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   function ativarTema(id){
     TEMAS.forEach(function(t){
       var painel = document.getElementById(t);
-      var botao = document.querySelector('.tab-tema[data-tema="' + t + '"]');
-      if (!painel || !botao) return;
+      var item = document.querySelector('.tema[data-tema="' + t + '"]');
+      if (!painel || !item) return;
       if (t === id){
         painel.hidden = false;
-        botao.setAttribute("aria-selected", "true");
+        item.classList.add("ativo", "aberto");
       } else {
         painel.hidden = true;
-        botao.setAttribute("aria-selected", "false");
+        item.classList.remove("ativo", "aberto");
       }
     });
   }
 
-  document.querySelectorAll(".tab-tema").forEach(function(botao){
+  document.querySelectorAll(".tema-cabecalho").forEach(function(botao){
     botao.addEventListener("click", function(){
       ativarTema(botao.getAttribute("data-tema"));
+    });
+  });
+
+  document.querySelectorAll(".subitens a[data-tema]").forEach(function(link){
+    link.addEventListener("click", function(){
+      ativarTema(link.getAttribute("data-tema"));
     });
   });
 
