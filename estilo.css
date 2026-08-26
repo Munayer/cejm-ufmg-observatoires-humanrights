@@ -1,0 +1,417 @@
+/* Observatório de Direitos Humanos — folha de estilo do painel.
+ *
+ * Programa visual: documento antes de interface. Times New Roman como corpo de
+ * texto, hierarquia por espaço e fio, não por caixa e cor. Design em preto e
+ * branco — nenhuma cor de destaque em lugar nenhum da página. Ênfase é sempre
+ * tipográfica: negrito para destaque, itálico + negrito + sublinhado para
+ * advertência. Nenhum canto arredondado, nenhuma sombra, nenhum preenchimento
+ * decorativo.
+ *
+ * Esta folha é lida em tempo de geração por dashboard/render.py e embutida na
+ * página. Editar aqui muda o painel inteiro sem tocar em Python.
+ */
+
+:root{
+  --papel:#ffffff;
+  --tinta:#000000;
+  --discreto:#4d4d4d;
+  --fio:#d9d9d9;
+  --fio-forte:#8c8c8c;
+  --barra:#c2c2c2;
+  --barra-fundo:#f0f0f0;
+
+  --serif:"Times New Roman",Times,"Liberation Serif","Nimbus Roman",serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  --medida:54rem;
+  --altura-menu:3.4rem;
+}
+
+/* Preto e branco em qualquer preferência de sistema — não há tema escuro
+   colorido: só existe um design, e ele é monocromático por decisão. */
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--papel);
+  color:var(--tinta);
+  font-family:var(--serif);
+  font-size:17px;
+  line-height:1.62;
+  text-rendering:optimizeLegibility;
+  font-kerning:normal;
+  padding-top:var(--altura-menu);
+}
+
+.folha{
+  max-width:var(--medida);
+  margin:0 auto;
+  padding:3.2rem 1.5rem 6rem;
+  counter-reset:secao;
+}
+
+/* ---------------------------------------------------------- menu superior */
+
+.barra-menu{
+  position:fixed;
+  top:0; left:0; right:0;
+  height:var(--altura-menu);
+  background:var(--papel);
+  border-bottom:1px solid var(--tinta);
+  z-index:100;
+}
+.barra-interna{
+  max-width:var(--medida);
+  height:100%;
+  margin:0 auto;
+  padding:0 1.5rem;
+  display:flex;
+  align-items:center;
+  gap:1.6rem;
+}
+.marca{
+  font-size:.86rem;
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+.menu-links{
+  list-style:none;
+  margin:0; padding:0;
+  display:flex;
+  gap:1.3rem;
+  flex:0 0 auto;
+}
+.menu-links a{
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+  padding-bottom:.15rem;
+}
+.menu-links a:hover{border-bottom-color:var(--tinta)}
+
+.busca{
+  position:relative;
+  flex:1 1 auto;
+  max-width:22rem;
+  margin-left:auto;
+}
+#campo-busca{
+  width:100%;
+  font-family:var(--serif);
+  font-size:.9rem;
+  padding:.4rem .6rem;
+  border:1px solid var(--tinta);
+  background:var(--papel);
+  color:var(--tinta);
+}
+#campo-busca:focus{outline:2px solid var(--tinta);outline-offset:1px}
+.resultados-busca{
+  position:absolute;
+  top:calc(100% + 2px);
+  left:0; right:0;
+  background:var(--papel);
+  border:1px solid var(--tinta);
+  max-height:60vh;
+  overflow-y:auto;
+  z-index:101;
+}
+.resultados-busca a{
+  display:block;
+  padding:.5rem .7rem;
+  text-decoration:none;
+  color:var(--tinta);
+  border-bottom:1px solid var(--fio);
+  font-size:.88rem;
+}
+.resultados-busca a:last-child{border-bottom:none}
+.resultados-busca a .tipo{
+  display:block;
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--discreto);
+}
+.resultados-busca a:hover,
+.resultados-busca a.ativo{background:var(--barra-fundo)}
+.resultados-busca .vazio{
+  padding:.5rem .7rem;
+  font-size:.85rem;
+  font-style:italic;
+  color:var(--discreto);
+}
+
+@media (max-width:720px){
+  .barra-interna{flex-wrap:wrap;height:auto;padding:.6rem 1rem}
+  .barra-menu{position:sticky;height:auto}
+  body{padding-top:0}
+  .menu-links{order:3;flex-basis:100%;overflow-x:auto;gap:1rem}
+  .busca{order:2;max-width:none;flex-basis:100%}
+}
+
+/* ------------------------------------------------------------- tipografia */
+
+h1{
+  font-weight:400;
+  font-size:2.15rem;
+  line-height:1.15;
+  letter-spacing:-.005em;
+  margin:0;
+}
+
+h2{
+  counter-increment:secao;
+  font-weight:400;
+  font-size:.82rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--discreto);
+  margin:3.6rem 0 1.4rem;
+  padding-top:1rem;
+  border-top:1px solid var(--fio);
+}
+h2::before{content:counter(secao) ".\00a0\00a0"}
+
+h3{
+  font-weight:400;
+  font-size:1.28rem;
+  line-height:1.3;
+  margin:0;
+}
+
+h4{
+  font-weight:400;
+  font-size:.76rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--discreto);
+  margin:1.8rem 0 .5rem;
+}
+
+p{margin:.7rem 0}
+p:first-child{margin-top:0}
+
+a{color:inherit;text-decoration:underline;text-decoration-thickness:.5px;
+  text-underline-offset:.18em;text-decoration-color:var(--fio-forte)}
+a:hover{text-decoration-color:var(--tinta)}
+
+em{font-style:italic}
+strong{font-weight:700}
+
+.mono{font-family:var(--mono);font-size:.78rem;letter-spacing:-.01em}
+
+.miolo{max-width:40rem}
+
+/* ------------------------------------------------------------- cabeçalho */
+
+.chapeu{
+  font-size:.74rem;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--discreto);
+  margin-bottom:.9rem;
+}
+
+.linha-fina{
+  margin-top:.9rem;
+  padding-top:.8rem;
+  border-top:1px solid var(--tinta);
+  font-size:.8rem;
+  color:var(--discreto);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+/* ------------------------------------------------------------------ notas */
+
+.nota{
+  margin:2rem 0;
+  padding:.1rem 0 .1rem 1.1rem;
+  border-left:2px solid var(--fio-forte);
+}
+.nota.grave{border-left:2px solid var(--tinta)}
+.nota .rotulo{
+  display:block;
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--discreto);
+  margin-bottom:.3rem;
+}
+/* Advertência: a única ênfase é tipográfica — itálico, negrito e sublinhado,
+   nunca cor. */
+.nota.grave .rotulo,
+.nota.grave p{
+  font-style:italic;
+  font-weight:700;
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+  text-underline-offset:.15em;
+  color:var(--tinta);
+}
+.nota p{margin:.25rem 0;font-size:.94rem}
+
+/* ------------------------------------------------------------- indicadores */
+
+.indicador{margin:0 0 3.2rem}
+.indicador + .indicador{padding-top:2.6rem;border-top:1px solid var(--fio)}
+
+.qualificacao{
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  color:var(--discreto);
+  margin:.45rem 0 0;
+}
+.qualificacao .sintetico{font-weight:700;font-style:italic;text-decoration:underline}
+
+.pergunta{
+  font-style:italic;
+  font-size:1.02rem;
+  color:var(--tinta);
+  margin:.8rem 0 1.6rem;
+  max-width:40rem;
+}
+
+.serie{margin:1.4rem 0 0}
+
+.registro{
+  display:grid;
+  grid-template-columns:11.5rem 1fr 4.2rem 11.5rem;
+  gap:0 1.1rem;
+  align-items:center;
+  padding:.16rem 0;
+}
+.registro .lugar{
+  font-size:.9rem;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.registro.pais{border-bottom:1px solid var(--fio);padding-bottom:.4rem;margin-bottom:.4rem}
+.registro.pais .lugar{font-variant:small-caps;letter-spacing:.03em;font-size:1rem}
+.registro .cifra{
+  text-align:right;
+  font-variant-numeric:tabular-nums lining-nums;
+  font-size:.94rem;
+}
+.registro .faixa{
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--discreto);
+  white-space:nowrap;
+}
+.registro .faixa.excede{font-weight:700}
+
+.trilho{position:relative;height:6px;background:var(--barra-fundo)}
+.preenche{position:absolute;left:0;top:0;bottom:0;background:var(--barra)}
+.preenche.excede{background:var(--tinta)}
+.registro:not(.pais) .preenche{opacity:.88}
+.limiar{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--fio-forte)}
+
+.vazio{
+  font-size:.82rem;
+  color:var(--discreto);
+  font-style:italic;
+  padding:.1rem 0 .4rem 12.5rem;
+}
+
+/* --------------------------------------------------------------- listas */
+
+ul.rol{margin:.5rem 0;padding-left:1.1rem;max-width:40rem}
+ul.rol li{margin:.4rem 0;font-size:.94rem}
+ul.rol li::marker{color:var(--fio-forte)}
+
+.recusas li{color:var(--tinta)}
+
+/* ------------------------------------------------------------- normativo */
+
+.dever{margin:1.3rem 0;max-width:41rem}
+.dever .fonte-legal{font-size:.95rem}
+.dever .relacao{
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--discreto);
+  margin-left:.5rem;
+}
+.dever .relacao.pendente{font-weight:700;text-decoration:underline}
+.dever .obrigacao{margin:.2rem 0;font-size:.95rem}
+.dever .razao{
+  margin:.35rem 0 0;
+  font-size:.88rem;
+  color:var(--discreto);
+  padding-left:1rem;
+  border-left:1px solid var(--fio);
+}
+
+/* --------------------------------------------------------------- tabelas */
+
+.rolagem{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:34rem}
+thead th{
+  font-weight:400;
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--discreto);
+  text-align:left;
+  padding:0 1.2rem .4rem 0;
+  border-bottom:1px solid var(--tinta);
+}
+tbody td{
+  padding:.42rem 1.2rem .42rem 0;
+  border-bottom:1px solid var(--fio);
+  vertical-align:top;
+}
+tbody tr:last-child td{border-bottom:none}
+td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
+
+.ancora{
+  font-family:var(--mono);
+  font-size:.76rem;
+  word-break:break-all;
+  padding:.6rem 0 .6rem 1rem;
+  border-left:2px solid var(--fio-forte);
+  margin:.8rem 0;
+}
+
+/* -------------------------------------------------------------- rodapé */
+
+.rodape{
+  margin-top:4rem;
+  padding-top:1rem;
+  border-top:1px solid var(--tinta);
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--discreto);
+}
+
+/* ------------------------------------------------------------ impressão */
+
+@media print{
+  :root{--papel:#fff;--tinta:#000;--discreto:#444;--fio:#bbb;
+        --fio-forte:#777;--barra:#000;--barra-fundo:#ddd}
+  body{font-size:10.5pt;padding-top:0}
+  .folha{padding:0;max-width:none}
+  .indicador{break-inside:avoid}
+  .nota{break-inside:avoid}
+  .barra-menu{display:none}
+  a{text-decoration:none}
+}
+
+/* --------------------------------------------------------------- estreito */
+
+@media (max-width:720px){
+  body{font-size:16px}
+  .folha{padding:2.5rem 1.1rem 4rem}
+  h1{font-size:1.75rem}
+  .registro{grid-template-columns:8rem 1fr 3.8rem;gap:0 .7rem}
+  .registro .faixa{white-space:normal}
+  .registro .lugar{font-size:.82rem}
+  .registro .faixa{grid-column:1 / -1;padding-left:8.7rem;margin-top:-.1rem}
+  .vazio{padding-left:8.7rem}
+}

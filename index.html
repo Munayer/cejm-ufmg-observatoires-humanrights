@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BR-MG-ObservatoriumHumanitarium — Observatório de Direitos Humanos · Minas Gerais</title>
+<style>/* Observatório de Direitos Humanos — folha de estilo do painel.
+ *
+ * Programa visual: documento antes de interface. Times New Roman como corpo de
+ * texto, hierarquia por espaço e fio, não por caixa e cor. Design em preto e
+ * branco — nenhuma cor de destaque em lugar nenhum da página. Ênfase é sempre
+ * tipográfica: negrito para destaque, itálico + negrito + sublinhado para
+ * advertência. Nenhum canto arredondado, nenhuma sombra, nenhum preenchimento
+ * decorativo.
+ *
+ * Esta folha é lida em tempo de geração por dashboard/render.py e embutida na
+ * página. Editar aqui muda o painel inteiro sem tocar em Python.
+ */
+
+:root{
+  --papel:#ffffff;
+  --tinta:#000000;
+  --discreto:#4d4d4d;
+  --fio:#d9d9d9;
+  --fio-forte:#8c8c8c;
+  --barra:#c2c2c2;
+  --barra-fundo:#f0f0f0;
+
+  --serif:"Times New Roman",Times,"Liberation Serif","Nimbus Roman",serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  --medida:54rem;
+  --altura-menu:3.4rem;
+}
+
+/* Preto e branco em qualquer preferência de sistema — não há tema escuro
+   colorido: só existe um design, e ele é monocromático por decisão. */
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--papel);
+  color:var(--tinta);
+  font-family:var(--serif);
+  font-size:17px;
+  line-height:1.62;
+  text-rendering:optimizeLegibility;
+  font-kerning:normal;
+  padding-top:var(--altura-menu);
+}
+
+.folha{
+  max-width:var(--medida);
+  margin:0 auto;
+  padding:3.2rem 1.5rem 6rem;
+  counter-reset:secao;
+}
+
+/* ---------------------------------------------------------- menu superior */
+
+.barra-menu{
+  position:fixed;
+  top:0; left:0; right:0;
+  height:var(--altura-menu);
+  background:var(--papel);
+  border-bottom:1px solid var(--tinta);
+  z-index:100;
+}
+.barra-interna{
+  max-width:var(--medida);
+  height:100%;
+  margin:0 auto;
+  padding:0 1.5rem;
+  display:flex;
+  align-items:center;
+  gap:1.6rem;
+}
+.marca{
+  font-size:.86rem;
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+.menu-links{
+  list-style:none;
+  margin:0; padding:0;
+  display:flex;
+  gap:1.3rem;
+  flex:0 0 auto;
+}
+.menu-links a{
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+  padding-bottom:.15rem;
+}
+.menu-links a:hover{border-bottom-color:var(--tinta)}
+
+.busca{
+  position:relative;
+  flex:1 1 auto;
+  max-width:22rem;
+  margin-left:auto;
+}
+#campo-busca{
+  width:100%;
+  font-family:var(--serif);
+  font-size:.9rem;
+  padding:.4rem .6rem;
+  border:1px solid var(--tinta);
+  background:var(--papel);
+  color:var(--tinta);
+}
+#campo-busca:focus{outline:2px solid var(--tinta);outline-offset:1px}
+.resultados-busca{
+  position:absolute;
+  top:calc(100% + 2px);
+  left:0; right:0;
+  background:var(--papel);
+  border:1px solid var(--tinta);
+  max-height:60vh;
+  overflow-y:auto;
+  z-index:101;
+}
+.resultados-busca a{
+  display:block;
+  padding:.5rem .7rem;
+  text-decoration:none;
+  color:var(--tinta);
+  border-bottom:1px solid var(--fio);
+  font-size:.88rem;
+}
+.resultados-busca a:last-child{border-bottom:none}
+.resultados-busca a .tipo{
+  display:block;
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--discreto);
+}
+.resultados-busca a:hover,
+.resultados-busca a.ativo{background:var(--barra-fundo)}
+.resultados-busca .vazio{
+  padding:.5rem .7rem;
+  font-size:.85rem;
+  font-style:italic;
+  color:var(--discreto);
+}
+
+@media (max-width:720px){
+  .barra-interna{flex-wrap:wrap;height:auto;padding:.6rem 1rem}
+  .barra-menu{position:sticky;height:auto}
+  body{padding-top:0}
+  .menu-links{order:3;flex-basis:100%;overflow-x:auto;gap:1rem}
+  .busca{order:2;max-width:none;flex-basis:100%}
+}
+
+/* ------------------------------------------------------------- tipografia */
+
+h1{
+  font-weight:400;
+  font-size:2.15rem;
+  line-height:1.15;
+  letter-spacing:-.005em;
+  margin:0;
+}
+
+h2{
+  counter-increment:secao;
+  font-weight:400;
+  font-size:.82rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--discreto);
+  margin:3.6rem 0 1.4rem;
+  padding-top:1rem;
+  border-top:1px solid var(--fio);
+}
+h2::before{content:counter(secao) ".\00a0\00a0"}
+
+h3{
+  font-weight:400;
+  font-size:1.28rem;
+  line-height:1.3;
+  margin:0;
+}
+
+h4{
+  font-weight:400;
+  font-size:.76rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--discreto);
+  margin:1.8rem 0 .5rem;
+}
+
+p{margin:.7rem 0}
+p:first-child{margin-top:0}
+
+a{color:inherit;text-decoration:underline;text-decoration-thickness:.5px;
+  text-underline-offset:.18em;text-decoration-color:var(--fio-forte)}
+a:hover{text-decoration-color:var(--tinta)}
+
+em{font-style:italic}
+strong{font-weight:700}
+
+.mono{font-family:var(--mono);font-size:.78rem;letter-spacing:-.01em}
+
+.miolo{max-width:40rem}
+
+/* ------------------------------------------------------------- cabeçalho */
+
+.chapeu{
+  font-size:.74rem;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--discreto);
+  margin-bottom:.9rem;
+}
+
+.linha-fina{
+  margin-top:.9rem;
+  padding-top:.8rem;
+  border-top:1px solid var(--tinta);
+  font-size:.8rem;
+  color:var(--discreto);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+/* ------------------------------------------------------------------ notas */
+
+.nota{
+  margin:2rem 0;
+  padding:.1rem 0 .1rem 1.1rem;
+  border-left:2px solid var(--fio-forte);
+}
+.nota.grave{border-left:2px solid var(--tinta)}
+.nota .rotulo{
+  display:block;
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--discreto);
+  margin-bottom:.3rem;
+}
+/* Advertência: a única ênfase é tipográfica — itálico, negrito e sublinhado,
+   nunca cor. */
+.nota.grave .rotulo,
+.nota.grave p{
+  font-style:italic;
+  font-weight:700;
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+  text-underline-offset:.15em;
+  color:var(--tinta);
+}
+.nota p{margin:.25rem 0;font-size:.94rem}
+
+/* ------------------------------------------------------------- indicadores */
+
+.indicador{margin:0 0 3.2rem}
+.indicador + .indicador{padding-top:2.6rem;border-top:1px solid var(--fio)}
+
+.qualificacao{
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  color:var(--discreto);
+  margin:.45rem 0 0;
+}
+.qualificacao .sintetico{font-weight:700;font-style:italic;text-decoration:underline}
+
+.pergunta{
+  font-style:italic;
+  font-size:1.02rem;
+  color:var(--tinta);
+  margin:.8rem 0 1.6rem;
+  max-width:40rem;
+}
+
+.serie{margin:1.4rem 0 0}
+
+.registro{
+  display:grid;
+  grid-template-columns:11.5rem 1fr 4.2rem 11.5rem;
+  gap:0 1.1rem;
+  align-items:center;
+  padding:.16rem 0;
+}
+.registro .lugar{
+  font-size:.9rem;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.registro.pais{border-bottom:1px solid var(--fio);padding-bottom:.4rem;margin-bottom:.4rem}
+.registro.pais .lugar{font-variant:small-caps;letter-spacing:.03em;font-size:1rem}
+.registro .cifra{
+  text-align:right;
+  font-variant-numeric:tabular-nums lining-nums;
+  font-size:.94rem;
+}
+.registro .faixa{
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--discreto);
+  white-space:nowrap;
+}
+.registro .faixa.excede{font-weight:700}
+
+.trilho{position:relative;height:6px;background:var(--barra-fundo)}
+.preenche{position:absolute;left:0;top:0;bottom:0;background:var(--barra)}
+.preenche.excede{background:var(--tinta)}
+.registro:not(.pais) .preenche{opacity:.88}
+.limiar{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--fio-forte)}
+
+.vazio{
+  font-size:.82rem;
+  color:var(--discreto);
+  font-style:italic;
+  padding:.1rem 0 .4rem 12.5rem;
+}
+
+/* --------------------------------------------------------------- listas */
+
+ul.rol{margin:.5rem 0;padding-left:1.1rem;max-width:40rem}
+ul.rol li{margin:.4rem 0;font-size:.94rem}
+ul.rol li::marker{color:var(--fio-forte)}
+
+.recusas li{color:var(--tinta)}
+
+/* ------------------------------------------------------------- normativo */
+
+.dever{margin:1.3rem 0;max-width:41rem}
+.dever .fonte-legal{font-size:.95rem}
+.dever .relacao{
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--discreto);
+  margin-left:.5rem;
+}
+.dever .relacao.pendente{font-weight:700;text-decoration:underline}
+.dever .obrigacao{margin:.2rem 0;font-size:.95rem}
+.dever .razao{
+  margin:.35rem 0 0;
+  font-size:.88rem;
+  color:var(--discreto);
+  padding-left:1rem;
+  border-left:1px solid var(--fio);
+}
+
+/* --------------------------------------------------------------- tabelas */
+
+.rolagem{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:34rem}
+thead th{
+  font-weight:400;
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--discreto);
+  text-align:left;
+  padding:0 1.2rem .4rem 0;
+  border-bottom:1px solid var(--tinta);
+}
+tbody td{
+  padding:.42rem 1.2rem .42rem 0;
+  border-bottom:1px solid var(--fio);
+  vertical-align:top;
+}
+tbody tr:last-child td{border-bottom:none}
+td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
+
+.ancora{
+  font-family:var(--mono);
+  font-size:.76rem;
+  word-break:break-all;
+  padding:.6rem 0 .6rem 1rem;
+  border-left:2px solid var(--fio-forte);
+  margin:.8rem 0;
+}
+
+/* -------------------------------------------------------------- rodapé */
+
+.rodape{
+  margin-top:4rem;
+  padding-top:1rem;
+  border-top:1px solid var(--tinta);
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--discreto);
+}
+
+/* ------------------------------------------------------------ impressão */
+
+@media print{
+  :root{--papel:#fff;--tinta:#000;--discreto:#444;--fio:#bbb;
+        --fio-forte:#777;--barra:#000;--barra-fundo:#ddd}
+  body{font-size:10.5pt;padding-top:0}
+  .folha{padding:0;max-width:none}
+  .indicador{break-inside:avoid}
+  .nota{break-inside:avoid}
+  .barra-menu{display:none}
+  a{text-decoration:none}
+}
+
+/* --------------------------------------------------------------- estreito */
+
+@media (max-width:720px){
+  body{font-size:16px}
+  .folha{padding:2.5rem 1.1rem 4rem}
+  h1{font-size:1.75rem}
+  .registro{grid-template-columns:8rem 1fr 3.8rem;gap:0 .7rem}
+  .registro .faixa{white-space:normal}
+  .registro .lugar{font-size:.82rem}
+  .registro .faixa{grid-column:1 / -1;padding-left:8.7rem;margin-top:-.1rem}
+  .vazio{padding-left:8.7rem}
+}
+
+
+/* ============================================================
+   Adições da prévia — menu de Temáticas e Minas Gerais em
+   primeiro plano. Vive à parte de estilo.css original porque é
+   específica desta mudança de escopo; ao integrar de volta ao
+   repositório real, mesclar aqui dentro de dashboard/estilo.css.
+   ============================================================ */
+
+.barra-temas{
+  margin:1.8rem 0 0;
+  border-bottom:2px solid var(--fio-forte);
+  overflow-x:auto;
+}
+.barra-temas-interna{display:flex;gap:0}
+.tab-tema{
+  font-family:var(--sans);
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--discreto);
+  background:none;
+  border:none;
+  border-bottom:3px solid transparent;
+  padding:.85rem 1.2rem;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.tab-tema:hover{color:var(--azul-escuro)}
+.tab-tema[aria-selected="true"]{color:var(--azul-escuro);border-bottom-color:var(--azul)}
+.tab-tema .rotulo-status{
+  display:inline-block;
+  margin-left:.45rem;
+  font-size:.6rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--discreto);
+  background:var(--barra-fundo);
+  padding:.1rem .4rem;
+}
+.tab-tema[aria-selected="true"] .rotulo-status{color:var(--azul-escuro)}
+
+.tema-painel[hidden]{display:none}
+
+.destaque-mg{
+  margin:1.3rem 0 0;
+  padding:1rem 1.2rem .8rem;
+  background:var(--azul-claro);
+  border:1px solid var(--fio);
+  border-left:4px solid var(--azul-escuro);
+  max-width:44rem;
+}
+.destaque-rotulo{
+  display:block;
+  font-size:.68rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--azul-escuro);
+  margin-bottom:.5rem;
+}
+.destaque-registro .registro{padding:0}
+
+details.ver-todos{margin:1.5rem 0 0}
+details.ver-todos > summary{
+  cursor:pointer;
+  font-size:.82rem;
+  font-weight:600;
+  color:var(--azul);
+  padding:.4rem 0;
+  list-style:none;
+}
+details.ver-todos > summary::-webkit-details-marker{display:none}
+details.ver-todos > summary::before{content:"\25B8\00a0";display:inline-block}
+details.ver-todos[open] > summary::before{content:"\25BE\00a0"}
+details.ver-todos .serie{margin-top:.4rem}
+
+.selo-a-localizar{
+  display:inline-block;
+  font-size:.6rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--alerta);
+  border:1px solid var(--alerta);
+  padding:.05rem .35rem;
+  margin-left:.4rem;
+  white-space:nowrap;
+  vertical-align:middle;
+}
+a.lig-oficial::after{content:" \2197";font-size:.82em}
+
+.aviso-convencao{
+  font-size:.86rem;
+  color:var(--discreto);
+  max-width:44rem;
+  margin:.8rem 0 0;
+  padding:.8rem 1rem;
+  border:1px solid var(--fio);
+  background:var(--fundo);
+}
+
+.card-vazio{
+  margin:1.2rem 0;
+  padding:1.6rem 1.8rem;
+  background:var(--papel);
+  border:1px dashed var(--fio-forte);
+  color:var(--discreto);
+  font-size:.92rem;
+  max-width:44rem;
+}
+.card-vazio strong{color:var(--tinta)}
+
+@media print{
+  .barra-temas{display:none}
+  .tema-painel[hidden]{display:block !important}
+  details.ver-todos{display:block}
+  details.ver-todos > summary{display:none}
+}
+</style>
+</head>
+<body>
+<div class="folha">
+
+  <nav class="barra-menu">
+    <div class="barra-interna">
+      <span class="marca">BR-MG-ObservatoriumHumanitarium</span>
+      <div class="busca">
+        <input type="text" id="campo-busca" placeholder="Buscar indicador, dever, fonte…"
+               autocomplete="off" aria-label="Buscar no painel">
+        <div id="resultados-busca" class="resultados-busca" hidden></div>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <p class="chapeu">Minas Gerais e Sistema Interamericano de Direitos Humanos</p>
+    <h1>BR-MG-ObservatoriumHumanitarium — Observatório de Direitos Humanos</h1>
+    <p class="linha-fina">
+      Recorte principal: Estado de Minas Gerais &nbsp;·&nbsp;
+      três temáticas — Execução Penal, Direitos Humanos no Meio Ambiente Urbano,
+      Direitos Humanos no Meio Ambiente Rural &nbsp;·&nbsp;
+      Brasil e demais unidades da federação aparecem como remissão opcional,
+      não como página geral.
+    </p>
+  </header>
+
+  <nav class="barra-temas" aria-label="Temáticas">
+    <div class="barra-temas-interna">
+      <button type="button" class="tab-tema" data-tema="tema-execucao-penal"
+              aria-selected="true">Execução Penal
+        <span class="rotulo-status">implementado</span></button>
+      <button type="button" class="tab-tema" data-tema="tema-ambiente-urbano"
+              aria-selected="false">Direitos Humanos no Meio Ambiente Urbano
+        <span class="rotulo-status">candidato</span></button>
+      <button type="button" class="tab-tema" data-tema="tema-ambiente-rural"
+              aria-selected="false">Direitos Humanos no Meio Ambiente Rural
+        <span class="rotulo-status">candidato</span></button>
+    </div>
+  </nav>
+
+  <!-- ================================================== TEMA: EXECUÇÃO PENAL -->
+  <section class="tema-painel" id="tema-execucao-penal">
+
+    <p class="linha-fina" style="margin-top:1.4rem">
+      Período de referência 2025-S1 &nbsp;·&nbsp;
+      gerado em 2026-08-22T13:35:17+00:00 UTC &nbsp;·&nbsp;
+      4 registros de evidência
+    </p>
+
+    <div class="nota grave">
+      <span class="rotulo">Advertência</span>
+      <p>Esta página contém dados sintéticos e não é estatística. Os números foram
+      gerados por função determinística para exercitar o programa sem acesso à rede.
+      Não descrevem qualquer estabelecimento, estado ou pessoa, e não devem ser
+      citados, publicados nem encaminhados como informação sobre a realidade
+      prisional brasileira.</p>
+    </div>
+    <div class="nota">
+      <span class="rotulo">Citações por conferir — 12</span>
+      <p>As referências normativas desta página foram semeadas pelo repositório a
+      partir de fontes secundárias. Confira cada uma contra o documento oficial e
+      marque <span class="mono">verified = true</span> antes de usá-las em peça ou
+      publicação. O link ao lado de cada citação aponta para o texto oficial —
+      quando ele existe e foi conferido — mas isso não substitui a conferência de
+      redação linha a linha.</p>
+    </div>
+
+    <h2 id="objeto-execucao-penal">Objeto</h2>
+    <div class="miolo">
+      <p>Esta temática confronta duas coisas públicas: os números que o Estado
+      brasileiro publica sobre o sistema penal em <strong>Minas Gerais</strong> e os
+      deveres jurídicos que já o vinculam — na Constituição, na lei federal, na
+      jurisprudência do STF e no Sistema Interamericano de Direitos Humanos.</p>
+      <p>O recorte é o Estado de Minas Gerais. O Brasil e as demais unidades da
+      federação aparecem como comparação — abra "Ver Minas Gerais ao lado do
+      Brasil e das demais unidades da federação" em cada indicador para
+      consultá-los — não como o objeto principal desta página.</p>
+      <p>O observatório não mede a realidade prisional. Mede a
+      <em>autodescrição</em> que a administração produz sobre ela e a coloca ao
+      lado da norma. Toda cifra aqui pode ser refeita por um terceiro a partir dos
+      arquivos originais listados na seção de evidência.</p>
+      <p>Nenhum número desta página afirma que houve violação de direito. Afirmar
+      isso é ato de aplicação do direito e cabe a quem tem competência para
+      praticá-lo.</p>
+    </div>
+    <div class="aviso-convencao">
+      <strong>Convenção de citação desta página:</strong> cada referência
+      normativa abaixo é um hiperlink para o texto oficial correspondente —
+      Planalto/Casa Civil para lei e decreto federal, o portal do STF para
+      jurisprudência, a Corte Interamericana (ou o índice mantido pelo CNJ) para
+      resoluções de supervisão de cumprimento. Uma citação sem esse vínculo ainda
+      verificado fica sem link e recebe o selo
+      <span class="selo-a-localizar" style="margin-left:0">fonte oficial: a localizar</span>
+      em vez de apontar para qualquer coisa.
+    </div>
+
+    <h2 id="ressalvas-execucao-penal">O que estas fontes não medem</h2>
+    <ul class="rol">
+      <li><strong>Base sintética em formato SISDEPEN (demonstração).</strong> NÃO
+      são dados reais. Nenhum número daqui descreve qualquer estabelecimento,
+      estado ou pessoa.</li>
+      <li><strong>Base sintética em formato SISDEPEN (demonstração).</strong> Serve
+      para verificar o funcionamento do código, não para conhecer a realidade
+      prisional brasileira.</li>
+      <li>O recorte territorial é Minas Gerais; o comparativo com o Brasil e as
+      demais unidades da federação é remissão opcional, não o objeto principal
+      desta página.</li>
+    </ul>
+
+    <h2 id="indicadores-execucao-penal">Indicadores</h2>
+    <section class="indicador" id="taxa_ocupacao">
+  <h3>Taxa de ocupação carcerária</h3>
+  <p class="qualificacao">pessoas por vaga · quanto maior, pior · <span class="sintetico">série sintética</span></p>
+  <p class="pergunta">Quantas pessoas privadas de liberdade existem para cada vaga declarada pelo próprio Estado?</p>
+  <div class="destaque-mg"><span class="destaque-rotulo">Minas Gerais</span><div class="destaque-registro"><div class="registro"><span class="lugar">Minas Gerais (MG)</span><div class="trilho"><span class="preenche" style="width:39.63%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">0,89</span><span class="faixa"></span></div></div></div><details class="ver-todos"><summary>Ver Minas Gerais ao lado do Brasil e das demais unidades da federação (28 registros)</summary><div class="serie"><div class="registro pais"><span class="lugar">Brasil</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:19.32%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,43</span><span class="faixa excede">acima da capacidade declarada</span></div><div class="registro"><span class="lugar">Sergipe (SE)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:50.54%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">2,13</span><span class="faixa excede">dobro da capacidade declarada</span></div><div class="registro"><span class="lugar">Goiás (GO)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:38.05%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,85</span><span class="faixa excede">superlotação acentuada</span></div><div class="registro"><span class="lugar">Roraima (RR)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:33.32%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,75</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rio Grande do Norte (RN)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:32.27%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,72</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Paraná (PR)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:30.87%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,69</span><span class="faixa"></span></div><div class="registro"><span class="lugar">São Paulo (SP)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:28.65%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,64</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rondônia (RO)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:28.31%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,63</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Santa Catarina (SC)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:26.44%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,59</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rio de Janeiro (RJ)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:23.93%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,54</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Espírito Santo (ES)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:23.52%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,53</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Pará (PA)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:21.84%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,49</span><span class="faixa excede">acima da capacidade declarada</span></div><div class="registro"><span class="lugar">Alagoas (AL)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:20.86%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,47</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Bahia (BA)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:19.19%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,43</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Acre (AC)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:18.19%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,41</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Mato Grosso (MT)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:18.18%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,41</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Tocantins (TO)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:17.09%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,38</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Paraíba (PB)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:14.35%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,32</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Ceará (CE)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:13.81%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,31</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Distrito Federal (DF)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:12.47%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,28</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Mato Grosso do Sul (MS)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:12.38%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,28</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Piauí (PI)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:9.35%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,21</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Pernambuco (PE)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:8.46%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,19</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Amapá (AP)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:5.41%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,12</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Amazonas (AM)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:4.74%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,11</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rio Grande do Sul (RS)</span><div class="trilho"><span class="preenche" style="width:44.70%"></span><span class="preenche excede" style="left:44.70%;width:3.66%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">1,08</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Maranhão (MA)</span><div class="trilho"><span class="preenche" style="width:40.17%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">0,90</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Minas Gerais (MG)</span><div class="trilho"><span class="preenche" style="width:39.63%"></span><span class="limiar" style="left:44.70%"></span></div><span class="cifra">0,89</span><span class="faixa"></span></div></div></details>
+  <h4>Como este número é calculado</h4>
+  <p class="miolo">Somam-se, por unidade da federação, a população prisional e a capacidade de todos os estabelecimentos informados no ciclo, e divide-se a primeira pela segunda. Estabelecimentos que não informaram um dos dois valores ficam fora do numerador e do denominador e são contados à parte, de modo que o leitor saiba quanto do universo entrou na conta. Nenhum valor ausente é estimado.</p>
+  <h4>Faixas descritivas</h4><ul class="rol"><li><span class="mono">≥ 1,00</span> — acima da capacidade declarada</li><li><span class="mono">≥ 1,50</span> — superlotação acentuada</li><li><span class="mono">≥ 2,00</span> — dobro da capacidade declarada</li></ul>
+  <h4>O que este indicador não afirma</h4>
+  <ul class="rol recusas"><li>Não afirma que houve violação de direito: afirma a distância entre o número declarado e o parâmetro citado. A qualificação jurídica é de quem aplica o direito.</li><li>Não mede condições materiais de detenção (saúde, alimentação, violência, acesso a defesa). Uma unidade dentro da capacidade pode violar a integridade pessoal de todos os modos que este número não vê.</li><li>Não ordena estados do &#x27;pior&#x27; para o &#x27;melhor&#x27;: as bases estaduais têm qualidades de preenchimento diferentes e a comparação direta esconde isso.</li><li>Não projeta valores futuros nem preenche ciclos não publicados.</li><li>&#x27;Vaga&#x27; é a capacidade que o próprio estabelecimento declara. O indicador não verifica se ela corresponde a espaço físico compatível com a dignidade da pessoa presa.</li></ul>
+  <h4>Âncoras normativas</h4>
+  <div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 5.2, 1969</a></strong><span class="relacao">mede cumprimento de</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Não submeter ninguém a tortura nem a penas ou tratos cruéis, desumanos ou degradantes, e tratar toda pessoa privada de liberdade com o respeito devido à dignidade inerente ao ser humano.</p><p class="razao">O dever de tratar a pessoa presa com o respeito devido à dignidade inerente ao ser humano tem, na jurisprudência interamericana sobre unidades brasileiras, a superlotação como um de seus indicadores materiais recorrentes. A taxa de ocupação é a expressão numérica dessa condição declarada pelo próprio Estado.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 5.1, 1969</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Assegurar a toda pessoa o respeito à sua integridade física, psíquica e moral.</p><p class="razao">A integridade física, psíquica e moral é afetada pela densidade de ocupação, mas não se reduz a ela: o vínculo é de contexto, não de aferição direta.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.cnj.jus.br/poder-judiciario/relacoes-internacionais/monitoramento-e-fiscalizacao-das-decisoes-da-corte-idh/jurisprudencia-corte-idh/medidas-provisorias/" target="_blank" rel="noopener" class="lig-oficial" title="CNJ — índice de medidas provisórias da Corte IDH sobre o Brasil">Corte IDH, Assunto Complexo Penitenciário de Curado (Pernambuco) vs. Brasil, 2014</a></strong><span class="relacao">aciona</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Adotar de imediato as medidas necessárias para proteger a vida e a integridade pessoal das pessoas privadas de liberdade no complexo, incluindo a redução da superlotação.</p><p class="razao">A redução da superlotação integra o objeto das medidas provisórias sobre o complexo. O indicador estadual não substitui o acompanhamento por unidade exigido pela Corte, mas indica se o contexto em que a unidade opera melhorou ou piorou entre ciclos.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.cnj.jus.br/poder-judiciario/relacoes-internacionais/monitoramento-e-fiscalizacao-das-decisoes-da-corte-idh/jurisprudencia-corte-idh/medidas-provisorias/" target="_blank" rel="noopener" class="lig-oficial" title="CNJ — índice de medidas provisórias da Corte IDH sobre o Brasil">Corte IDH, Assunto Instituto Penal Plácido de Sá Carvalho (Rio de Janeiro) vs. Brasil, 2016</a></strong><span class="relacao">aciona</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Proteger a vida e a integridade das pessoas privadas de liberdade na unidade e enfrentar as condições de superlotação e de degradação do estabelecimento.</p><p class="razao">Mesma razão da entrada anterior, para a unidade do Rio de Janeiro. Serve como série de contexto ao monitoramento específico da medida.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/leis/l7210.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Lei 7.210/1984">Lei 7.210/1984 (LEP), art. 85, 1984</a></strong><span class="relacao">mede cumprimento de</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Manter o estabelecimento penal com lotação compatível com sua estrutura e finalidade.</p><p class="razao">O art. 85 da LEP enuncia o dever em termos que a taxa de ocupação afere quase literalmente: lotação compatível com a estrutura do estabelecimento. Valor acima de 1,00 é, no vocabulário da própria lei, lotação incompatível com a capacidade que a administração declarou.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Constituição Federal">CF/88, art. 5º, XLIX, 1988</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Assegurar aos presos o respeito à integridade física e moral.</p><p class="razao">O parâmetro constitucional interno converge com o interamericano sobre o mesmo objeto. Registrar as duas âncoras permite observar o acoplamento entre os dois sistemas a partir de um único número.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.unodc.org/documents/justice-and-prison-reform/Nelson_Mandela_Rules-P-ebook.pdf" target="_blank" rel="noopener" class="lig-oficial" title="UNODC — texto oficial das Regras de Mandela">ONU — Regras de Nelson Mandela, Regra 13, 2015</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Assegurar que os locais de alojamento atendam a exigências de saúde, considerando clima, volume de ar, área mínima, iluminação, aquecimento e ventilação.</p><p class="razao">As Regras de Mandela fixam condições mínimas de alojamento em termos físicos (área, ar, ventilação) que a taxa de ocupação não mede. O vínculo serve para lembrar que estar dentro da capacidade declarada não equivale a cumprir a regra.</p></div>
+</section>
+<section class="indicador" id="deficit_vagas">
+  <h3>Déficit de vagas</h3>
+  <p class="qualificacao">vagas · quanto maior, pior · <span class="sintetico">série sintética</span></p>
+  <p class="pergunta">Quantas vagas faltariam, hoje, para que ninguém estivesse além da capacidade declarada?</p>
+  <div class="destaque-mg"><span class="destaque-rotulo">Minas Gerais</span><div class="destaque-registro"><div class="registro"><span class="lugar">Minas Gerais (MG)</span><div class="trilho"><span class="preenche" style="width:0.00%"></span></div><span class="cifra">-358</span><span class="faixa"></span></div></div></div><details class="ver-todos"><summary>Ver Minas Gerais ao lado do Brasil e das demais unidades da federação (28 registros)</summary><div class="serie"><div class="registro pais"><span class="lugar">Brasil</span><div class="trilho"><span class="preenche" style="width:95.24%"></span></div><span class="cifra">63.328</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Goiás (GO)</span><div class="trilho"><span class="preenche" style="width:9.14%"></span></div><span class="cifra">6.078</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rio Grande do Norte (RN)</span><div class="trilho"><span class="preenche" style="width:8.30%"></span></div><span class="cifra">5.518</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Paraná (PR)</span><div class="trilho"><span class="preenche" style="width:7.51%"></span></div><span class="cifra">4.992</span><span class="faixa"></span></div><div class="registro"><span class="lugar">São Paulo (SP)</span><div class="trilho"><span class="preenche" style="width:7.28%"></span></div><span class="cifra">4.839</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Roraima (RR)</span><div class="trilho"><span class="preenche" style="width:6.03%"></span></div><span class="cifra">4.009</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rio de Janeiro (RJ)</span><div class="trilho"><span class="preenche" style="width:6.00%"></span></div><span class="cifra">3.988</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rondônia (RO)</span><div class="trilho"><span class="preenche" style="width:5.53%"></span></div><span class="cifra">3.674</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Acre (AC)</span><div class="trilho"><span class="preenche" style="width:4.91%"></span></div><span class="cifra">3.263</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Pará (PA)</span><div class="trilho"><span class="preenche" style="width:4.66%"></span></div><span class="cifra">3.096</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Alagoas (AL)</span><div class="trilho"><span class="preenche" style="width:3.98%"></span></div><span class="cifra">2.648</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Santa Catarina (SC)</span><div class="trilho"><span class="preenche" style="width:3.92%"></span></div><span class="cifra">2.604</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Paraíba (PB)</span><div class="trilho"><span class="preenche" style="width:3.76%"></span></div><span class="cifra">2.500</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Mato Grosso (MT)</span><div class="trilho"><span class="preenche" style="width:3.57%"></span></div><span class="cifra">2.375</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Sergipe (SE)</span><div class="trilho"><span class="preenche" style="width:3.14%"></span></div><span class="cifra">2.088</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Ceará (CE)</span><div class="trilho"><span class="preenche" style="width:2.79%"></span></div><span class="cifra">1.855</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Espírito Santo (ES)</span><div class="trilho"><span class="preenche" style="width:2.67%"></span></div><span class="cifra">1.775</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Pernambuco (PE)</span><div class="trilho"><span class="preenche" style="width:2.54%"></span></div><span class="cifra">1.686</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Tocantins (TO)</span><div class="trilho"><span class="preenche" style="width:2.29%"></span></div><span class="cifra">1.522</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Piauí (PI)</span><div class="trilho"><span class="preenche" style="width:2.01%"></span></div><span class="cifra">1.336</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Mato Grosso do Sul (MS)</span><div class="trilho"><span class="preenche" style="width:1.85%"></span></div><span class="cifra">1.228</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Bahia (BA)</span><div class="trilho"><span class="preenche" style="width:1.59%"></span></div><span class="cifra">1.059</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Distrito Federal (DF)</span><div class="trilho"><span class="preenche" style="width:1.19%"></span></div><span class="cifra">794</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Amapá (AP)</span><div class="trilho"><span class="preenche" style="width:0.87%"></span></div><span class="cifra">576</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Amazonas (AM)</span><div class="trilho"><span class="preenche" style="width:0.54%"></span></div><span class="cifra">356</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rio Grande do Sul (RS)</span><div class="trilho"><span class="preenche" style="width:0.48%"></span></div><span class="cifra">318</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Minas Gerais (MG)</span><div class="trilho"><span class="preenche" style="width:0.00%"></span></div><span class="cifra">-358</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Maranhão (MA)</span><div class="trilho"><span class="preenche" style="width:0.00%"></span></div><span class="cifra">-491</span><span class="faixa"></span></div></div></details>
+  <h4>Como este número é calculado</h4>
+  <p class="miolo">Diferença simples entre os dois agregados do território, no mesmo ciclo e com o mesmo conjunto de estabelecimentos informantes.</p>
+  
+  <h4>O que este indicador não afirma</h4>
+  <ul class="rol recusas"><li>Não é uma recomendação de construir presídios: a diferença pode ser fechada tanto por vagas novas quanto por redução da população presa, e o número não decide entre as duas.</li><li>Não distribui o déficit por unidade: um agregado estadual equilibrado pode conter unidades em colapso.</li><li>Não considera pessoas em carceragens de delegacia quando o ciclo não as informa.</li></ul>
+  <h4>Âncoras normativas</h4>
+  <div class="dever"><div class="fonte-legal"><strong><a href="https://portal.stf.jus.br/processos/detalhe.asp?incidente=4783560" target="_blank" rel="noopener" class="lig-oficial" title="Portal STF — acompanhamento processual">STF, ADPF 347, 2015</a></strong><span class="relacao">mede cumprimento de</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Reconhecida a violação massiva e estrutural de direitos fundamentais no sistema prisional, adotar e executar plano de superação, com medidas verificáveis e prazos.</p><p class="razao">O plano de superação do estado de coisas inconstitucional trabalha com metas verificáveis. O déficit agregado por unidade da federação é uma das grandezas sobre as quais essas metas incidem, e sua série entre ciclos mostra a direção do movimento.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.stf.jus.br/arquivo/cms/jurisprudenciaSumulaVinculante/anexo/2020SumulaVinculante1a29e31a58Resumidocapaecontedo.pdf" target="_blank" rel="noopener" class="lig-oficial" title="Portal STF — texto compilado das súmulas vinculantes">STF, Súmula Vinculante 56, 2016</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Não manter o condenado em regime prisional mais gravoso por ausência de estabelecimento penal adequado; observar os parâmetros do RE 641.320.</p><p class="razao">A súmula proíbe converter falta de vaga em regime mais gravoso. O déficit não mede esse desvio, mas dimensiona a pressão que o produz.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 5.6, 1969</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Orientar as penas privativas de liberdade à reforma e à readaptação social dos condenados.</p><p class="razao">A finalidade de reforma e readaptação social pressupõe condições materiais que o déficit ajuda a dimensionar, sem aferir diretamente.</p></div>
+</section>
+<section class="indicador" id="cobertura_informacao">
+  <h3>Estabelecimentos na base do ciclo</h3>
+  <p class="qualificacao">estabelecimentos · sem direção normativa declarada · <span class="sintetico">série sintética</span></p>
+  <p class="pergunta">Quantos estabelecimentos o território tem na base publicada, e quantos deles deixaram de informar os dados usados aqui?</p>
+  <div class="destaque-mg"><span class="destaque-rotulo">Minas Gerais</span><div class="destaque-registro"><div class="registro"><span class="lugar">Minas Gerais (MG)</span><div class="trilho"><span class="preenche" style="width:1.76%"></span></div><span class="cifra">3</span><span class="faixa"></span></div></div></div><details class="ver-todos"><summary>Ver Minas Gerais ao lado do Brasil e das demais unidades da federação (28 registros)</summary><div class="serie"><div class="registro pais"><span class="lugar">Brasil</span><div class="trilho"><span class="preenche" style="width:95.24%"></span></div><span class="cifra">162</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Acre (AC)</span><div class="trilho"><span class="preenche" style="width:5.29%"></span></div><span class="cifra">9</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Goiás (GO)</span><div class="trilho"><span class="preenche" style="width:5.29%"></span></div><span class="cifra">9</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Piauí (PI)</span><div class="trilho"><span class="preenche" style="width:5.29%"></span></div><span class="cifra">9</span><span class="faixa"></span></div><div class="registro"><span class="lugar">São Paulo (SP)</span><div class="trilho"><span class="preenche" style="width:5.29%"></span></div><span class="cifra">9</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Ceará (CE)</span><div class="trilho"><span class="preenche" style="width:4.70%"></span></div><span class="cifra">8</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Mato Grosso (MT)</span><div class="trilho"><span class="preenche" style="width:4.70%"></span></div><span class="cifra">8</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Pará (PA)</span><div class="trilho"><span class="preenche" style="width:4.70%"></span></div><span class="cifra">8</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Paraíba (PB)</span><div class="trilho"><span class="preenche" style="width:4.70%"></span></div><span class="cifra">8</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Pernambuco (PE)</span><div class="trilho"><span class="preenche" style="width:4.70%"></span></div><span class="cifra">8</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rio Grande do Norte (RN)</span><div class="trilho"><span class="preenche" style="width:4.70%"></span></div><span class="cifra">8</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Alagoas (AL)</span><div class="trilho"><span class="preenche" style="width:4.12%"></span></div><span class="cifra">7</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Paraná (PR)</span><div class="trilho"><span class="preenche" style="width:4.12%"></span></div><span class="cifra">7</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Amapá (AP)</span><div class="trilho"><span class="preenche" style="width:3.53%"></span></div><span class="cifra">6</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rio de Janeiro (RJ)</span><div class="trilho"><span class="preenche" style="width:3.53%"></span></div><span class="cifra">6</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rondônia (RO)</span><div class="trilho"><span class="preenche" style="width:3.53%"></span></div><span class="cifra">6</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Roraima (RR)</span><div class="trilho"><span class="preenche" style="width:3.53%"></span></div><span class="cifra">6</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Santa Catarina (SC)</span><div class="trilho"><span class="preenche" style="width:3.53%"></span></div><span class="cifra">6</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Mato Grosso do Sul (MS)</span><div class="trilho"><span class="preenche" style="width:2.94%"></span></div><span class="cifra">5</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Amazonas (AM)</span><div class="trilho"><span class="preenche" style="width:2.35%"></span></div><span class="cifra">4</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Maranhão (MA)</span><div class="trilho"><span class="preenche" style="width:2.35%"></span></div><span class="cifra">4</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Bahia (BA)</span><div class="trilho"><span class="preenche" style="width:1.76%"></span></div><span class="cifra">3</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Distrito Federal (DF)</span><div class="trilho"><span class="preenche" style="width:1.76%"></span></div><span class="cifra">3</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Espírito Santo (ES)</span><div class="trilho"><span class="preenche" style="width:1.76%"></span></div><span class="cifra">3</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Minas Gerais (MG)</span><div class="trilho"><span class="preenche" style="width:1.76%"></span></div><span class="cifra">3</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Rio Grande do Sul (RS)</span><div class="trilho"><span class="preenche" style="width:1.76%"></span></div><span class="cifra">3</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Sergipe (SE)</span><div class="trilho"><span class="preenche" style="width:1.76%"></span></div><span class="cifra">3</span><span class="faixa"></span></div><div class="registro"><span class="lugar">Tocantins (TO)</span><div class="trilho"><span class="preenche" style="width:1.76%"></span></div><span class="cifra">3</span><span class="faixa"></span></div></div></details>
+  <h4>Como este número é calculado</h4>
+  <p class="miolo">Contagem direta das linhas da base por unidade da federação e das linhas com campo vazio nas variáveis usadas pelos demais indicadores.</p>
+  
+  <h4>O que este indicador não afirma</h4>
+  <ul class="rol recusas"><li>Não mede a veracidade do que foi informado, apenas a presença da informação.</li><li>Não sabe quantos estabelecimentos existem de fato: só enxerga os que aparecem na base publicada. A ausência de uma unidade inteira é invisível aqui.</li></ul>
+  <h4>Âncoras normativas</h4>
+  <div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 2, 1969</a></strong><span class="relacao">mede cumprimento de</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Adotar as medidas legislativas ou de outra natureza necessárias para tornar efetivos os direitos e liberdades da Convenção.</p><p class="razao">O dever de adotar disposições de direito interno para tornar efetivos os direitos convencionais alcança a produção de informação pública confiável: sem dado, não há supervisão de cumprimento possível. A cobertura da base é a medida mais direta desse pressuposto.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.corteidh.or.cr/docs/casos/articulos/seriec_333_por.pdf" target="_blank" rel="noopener" class="lig-oficial" title="Corte IDH — sentença do caso (texto oficial)">Corte IDH, Caso Favela Nova Brasília vs. Brasil, 2017</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Investigar de forma independente e efetiva as mortes decorrentes de intervenção policial e produzir e publicar dados oficiais sobre essas mortes.</p><p class="razao">O caso firma, em matéria de letalidade policial, o dever de produzir e publicar dados oficiais. O vínculo aqui é analógico e serve de contexto: a exigência de informação pública como condição de supervisão não é estranha ao sistema interamericano. Não se afirma que o caso vincule diretamente a base prisional.</p></div>
+</section>
+
+    <h2 id="fontes-execucao-penal">Fontes</h2>
+    <div class="rolagem">
+      <table>
+        <thead><tr><th>Fonte</th><th>Órgão</th><th>Periodicidade</th><th>Licença</th></tr></thead>
+        <tbody><tr><td>Base sintética em formato SISDEPEN (demonstração)</td><td>odh (gerada localmente)</td><td>sob demanda</td><td>—</td></tr></tbody>
+      </table>
+    </div>
+
+    <h2 id="evidencia-execucao-penal">Evidência</h2>
+    <p class="miolo">Cada coleta guarda o endereço original, o instante da
+    requisição e o hash SHA-256 do arquivo recebido. Quem quiser conferir baixa o
+    mesmo arquivo, calcula o hash e compara com a linha correspondente.</p>
+    <div class="rolagem">
+      <table>
+        <thead><tr><th>Instante (UTC)</th><th>Endereço</th><th>Origem</th>
+        <th>SHA-256</th><th>Bytes</th></tr></thead>
+        <tbody><tr><td class="mono">2026-08-22T13:35:17+00:00</td><td class="mono"><a href="odh://synthetic/sisdepen/2025-S1">odh://synthetic/sisdepen/2025-S1</a></td><td>synthetic</td><td class="mono">6bb8655e804d5997…</td><td class="numero mono">7.423</td></tr></tbody>
+      </table>
+    </div>
+    <h4>Âncora do livro de evidência</h4>
+    <p class="ancora">de577be657241de3181b66df7b25bc4e94d19f52ca17a55f04e6dae9f6074462</p>
+    <p class="miolo">Publique essa âncora junto do relatório. Qualquer alteração
+    posterior em qualquer registro do livro muda esse valor, e
+    <span class="mono">odh verificar</span> aponta onde.</p>
+
+  </section>
+
+  <!-- ============================================ TEMA: AMBIENTE URBANO -->
+  <section class="tema-painel" id="tema-ambiente-urbano" hidden>
+
+    <h2 id="objeto-ambiente-urbano">Objeto</h2>
+    <div class="miolo">
+      <p>Esta temática ainda não tem indicador implementado. A proposta é a
+      mesma do restante do observatório: medir a <em>autodescrição</em> que o
+      poder público produz sobre direitos humanos no meio ambiente urbano em
+      Minas Gerais — saneamento, moradia, remoções e riscos ambientais em áreas
+      urbanas são candidatos de escopo, não fontes já mapeadas — e colocá-la ao
+      lado do dever jurídico correspondente.</p>
+      <p>Nenhum sistema de informação foi mapeado e registrado como fonte
+      candidata ainda. Isso é pré-requisito para qualquer indicador entrar aqui,
+      na mesma convenção usada pela temática Execução Penal: um sistema entra
+      como <strong>Candidato</strong> em <span class="mono">docs/sistemas.md</span>
+      antes de virar adaptador.</p>
+    </div>
+
+    <h2 id="ressalvas-ambiente-urbano">O que estas fontes não medem</h2>
+    <div class="card-vazio">Nenhuma fonte pública foi registrada para esta
+    temática. Esta seção fica propositalmente sem conteúdo até que isso
+    aconteça — o observatório não publica ressalva de fonte que ainda não
+    existe.</div>
+
+    <h2 id="indicadores-ambiente-urbano">Indicadores</h2>
+    <div class="card-vazio"><strong>Nenhum indicador implementado nesta
+    temática.</strong> Um indicador só entra aqui depois que uma fonte é mapeada
+    como candidata, ganha adaptador testado e recebe vínculo normativo com
+    justificativa escrita — o mesmo processo que já valeu para a temática
+    Execução Penal.</div>
+
+    <h2 id="fontes-ambiente-urbano">Fontes</h2>
+    <div class="card-vazio">Nenhuma fonte registrada.</div>
+
+    <h2 id="evidencia-ambiente-urbano">Evidência</h2>
+    <div class="card-vazio">Sem coleta registrada — não há o que auditar
+    ainda.</div>
+
+  </section>
+
+  <!-- ============================================= TEMA: AMBIENTE RURAL -->
+  <section class="tema-painel" id="tema-ambiente-rural" hidden>
+
+    <h2 id="objeto-ambiente-rural">Objeto</h2>
+    <div class="miolo">
+      <p>Esta temática ainda não tem indicador implementado. A proposta é medir
+      a <em>autodescrição</em> que o poder público produz sobre direitos humanos
+      no meio ambiente rural em Minas Gerais — conflitos fundiários, populações
+      tradicionais, acesso à água e ao território são candidatos de escopo, não
+      fontes já mapeadas — e colocá-la ao lado do dever jurídico
+      correspondente.</p>
+      <p>Impacto de atividade minerária sobre populações rurais pode cruzar com
+      o que o <strong>MINERVA</strong> (observatório irmão, mesmo padrão de
+      família) mede sobre a atividade minerária em si — mas cada observatório
+      mantém seu próprio corpus normativo e suas próprias fontes; nenhum vínculo
+      é herdado automaticamente de um para o outro.</p>
+      <p>Nenhum sistema de informação foi mapeado e registrado como fonte
+      candidata ainda.</p>
+    </div>
+
+    <h2 id="ressalvas-ambiente-rural">O que estas fontes não medem</h2>
+    <div class="card-vazio">Nenhuma fonte pública foi registrada para esta
+    temática.</div>
+
+    <h2 id="indicadores-ambiente-rural">Indicadores</h2>
+    <div class="card-vazio"><strong>Nenhum indicador implementado nesta
+    temática.</strong> Mesmo processo de entrada da temática Execução
+    Penal se aplica aqui.</div>
+
+    <h2 id="fontes-ambiente-rural">Fontes</h2>
+    <div class="card-vazio">Nenhuma fonte registrada.</div>
+
+    <h2 id="evidencia-ambiente-rural">Evidência</h2>
+    <div class="card-vazio">Sem coleta registrada — não há o que auditar
+    ainda.</div>
+
+  </section>
+
+</div>
+
+<footer class="rodape-eu">
+  <div class="rodape-interno">
+    <div>
+      <h5>BR-MG-ObservatoriumHumanitarium</h5>
+      <p>Observatório de segunda ordem para o Estado de Minas Gerais, organizado
+      em temáticas: Execução Penal, Direitos Humanos no Meio Ambiente Urbano e
+      Direitos Humanos no Meio Ambiente Rural. Confronta a autodescrição estatal
+      com o dever jurídico correspondente. Não afirma violação de direito.</p>
+    </div>
+    <div>
+      <h5>Fontes oficiais das citações</h5>
+      <ul>
+        <li>Planalto/Casa Civil — lei e decreto federal</li>
+        <li>Portal do STF — jurisprudência</li>
+        <li>Corte Interamericana de Direitos Humanos — resoluções de supervisão</li>
+      </ul>
+    </div>
+    <div>
+      <h5>Verificação</h5>
+      <ul>
+        <li><span class="mono">odh verificar</span> — cadeia de evidência</li>
+        <li><span class="mono">odh normativo --pendentes</span> — citações a conferir</li>
+        <li><span class="mono">odh fontes</span> — fontes registradas</li>
+      </ul>
+    </div>
+  </div>
+  <div class="rodape-base">
+    Gerado por observatorio-dh &nbsp;·&nbsp; dados públicos &nbsp;·&nbsp;
+    a verificação independente é o ponto: refaça as contas
+  </div>
+</footer>
+
+<script>
+(function(){
+  var TEMAS = ["tema-execucao-penal", "tema-ambiente-urbano", "tema-ambiente-rural"];
+
+  function ativarTema(id){
+    TEMAS.forEach(function(t){
+      var painel = document.getElementById(t);
+      var botao = document.querySelector('.tab-tema[data-tema="' + t + '"]');
+      if (!painel || !botao) return;
+      if (t === id){
+        painel.hidden = false;
+        botao.setAttribute("aria-selected", "true");
+      } else {
+        painel.hidden = true;
+        botao.setAttribute("aria-selected", "false");
+      }
+    });
+  }
+
+  document.querySelectorAll(".tab-tema").forEach(function(botao){
+    botao.addEventListener("click", function(){
+      ativarTema(botao.getAttribute("data-tema"));
+    });
+  });
+
+  var INDICE = [
+    {"titulo": "Objeto", "tipo": "seção · execução penal", "ancora": "objeto-execucao-penal", "tema": "tema-execucao-penal"},
+    {"titulo": "O que estas fontes não medem", "tipo": "seção · execução penal", "ancora": "ressalvas-execucao-penal", "tema": "tema-execucao-penal"},
+    {"titulo": "Fontes", "tipo": "seção · execução penal", "ancora": "fontes-execucao-penal", "tema": "tema-execucao-penal"},
+    {"titulo": "Evidência", "tipo": "seção · execução penal", "ancora": "evidencia-execucao-penal", "tema": "tema-execucao-penal"},
+    {"titulo": "Taxa de ocupação carcerária", "tipo": "indicador", "ancora": "taxa_ocupacao", "tema": "tema-execucao-penal"},
+    {"titulo": "Déficit de vagas", "tipo": "indicador", "ancora": "deficit_vagas", "tema": "tema-execucao-penal"},
+    {"titulo": "Estabelecimentos na base do ciclo", "tipo": "indicador", "ancora": "cobertura_informacao", "tema": "tema-execucao-penal"},
+    {"titulo": "Direitos Humanos no Meio Ambiente Urbano", "tipo": "temática · candidato", "ancora": "objeto-ambiente-urbano", "tema": "tema-ambiente-urbano"},
+    {"titulo": "Direitos Humanos no Meio Ambiente Rural", "tipo": "temática · candidato", "ancora": "objeto-ambiente-rural", "tema": "tema-ambiente-rural"}
+  ];
+  var campo = document.getElementById("campo-busca");
+  var caixa = document.getElementById("resultados-busca");
+  if (!campo || !caixa) return;
+
+  function normaliza(t){
+    return t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  }
+
+  function renderiza(consulta){
+    var termo = normaliza(consulta.trim());
+    if (!termo){ caixa.hidden = true; caixa.innerHTML = ""; return; }
+    var achados = INDICE.filter(function(item){
+      return normaliza(item.titulo).indexOf(termo) !== -1;
+    }).slice(0, 10);
+    if (!achados.length){
+      caixa.innerHTML = '<div class="vazio">Nada encontrado para "' +
+        consulta.replace(/</g, "&lt;") + '".</div>';
+    } else {
+      caixa.innerHTML = achados.map(function(item, i){
+        return '<a href="#' + item.ancora + '" data-tema="' + item.tema + '" data-idx="' + i + '">' + item.titulo +
+          '<span class="tipo">' + item.tipo + '</span></a>';
+      }).join("");
+    }
+    caixa.hidden = false;
+  }
+
+  campo.addEventListener("input", function(){ renderiza(campo.value); });
+  campo.addEventListener("focus", function(){ if (campo.value) renderiza(campo.value); });
+  campo.addEventListener("keydown", function(ev){
+    if (ev.key === "Enter"){
+      var primeiro = caixa.querySelector("a");
+      if (primeiro){
+        ativarTema(primeiro.getAttribute("data-tema"));
+        window.location.hash = primeiro.getAttribute("href");
+        caixa.hidden = true;
+      }
+    }
+    if (ev.key === "Escape"){ caixa.hidden = true; campo.blur(); }
+  });
+  caixa.addEventListener("click", function(ev){
+    var a = ev.target.closest("a[data-tema]");
+    if (a) ativarTema(a.getAttribute("data-tema"));
+    caixa.hidden = true;
+  });
+  document.addEventListener("click", function(ev){
+    if (!ev.target.closest(".busca")) caixa.hidden = true;
+  });
+})();
+</script>
+</body>
+</html>
