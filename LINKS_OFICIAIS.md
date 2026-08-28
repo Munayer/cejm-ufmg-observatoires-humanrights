@@ -33,4 +33,4 @@ publica aquele tipo de ato.
   escrito em `linkages.toml`.
 - O repositório original menciona 18 pendências no total; este pacote só
   contém os 12 vínculos que aparecem nas três seções de indicador
-  incluídas em `base.html`. As demais 6 não estavam neste envio.
+  incluídas no painel (`index.html`). As demais 6 não estavam neste envio.

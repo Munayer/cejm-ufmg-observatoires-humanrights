@@ -1,107 +1,92 @@
 # BR-MG-ObservatoriumHumanitarium — Observatório de Direitos Humanos
 
-Recorte principal: **Estado de Minas Gerais**. Brasil e demais unidades da
-federação aparecem como remissão opcional dentro de cada indicador, não como
-página geral.
+**`index.html` é o produto.** Um único arquivo, zero rede, zero build,
+zero dependência — abre offline, imprime, pode ser hospedado como está
+(GitHub Pages, qualquer host estático). Todo o resto neste repositório é
+evidência ou documentação que sustenta o que está dentro dele; nada
+precisa ser processado para o site funcionar.
 
-Este diretório contém a **prévia de uma mudança de escopo** sobre o painel
-HTML que já existia (`base.html` / `estilo.css`), não o motor de dados
-completo. O núcleo Python que gera o painel a partir de dado real
-(`odh/core`, `odh/sources`, `odh/data/*.toml`) vive no repositório
-`observatorio-dh` e não faz parte deste pacote — ver "O que falta" abaixo.
+Recorte principal: **Estado de Minas Gerais**. Brasil e demais unidades da
+federação aparecem como remissão opcional dentro de cada indicador, não
+como página geral.
 
 *(Nome anterior deste projeto: Astreia — renomeado a pedido. O pacote
-Python interno segue `odh`; nome de marca continua fora dos
-identificadores de código, mesma lógica já adotada antes para não forçar
-refatoração.)*
+Python interno do motor de dados real, quando reintegrado, segue `odh`;
+nome de marca fica fora dos identificadores de código.)*
 
-## Primeiro dado real do projeto
+## O que tem em `index.html`
 
-`dados/sisdepen/` contém o primeiro recorte com **dado real**, não sintético:
-o SISDEPEN "base única" (nacional, 19 ciclos, 2016/2–2025/2), filtrado para
-Minas Gerais e cruzado para os campos desagregados por sexo feminino que
-correspondem a um direito já positivado (LEP, CF/88, legislação
-previdenciária) — não todo dado sobre mulheres, só o que tem endereço
-normativo. Metodologia, critério bloco a bloco e hash de evidência do
-arquivo original em `dados/sisdepen/sisdepen_mg_resumo.json`. O indicador
-"Direitos penitenciários de mulheres — Minas Gerais" no `index.html` usa
-esse recorte e está marcado com o selo "dado real" para não se confundir
-com os três indicadores sintéticos ao lado.
+- **Barra lateral de Temáticas** — outline fluida (expandir/colapsar por
+  transição de grade, sem JS medindo altura — inspirado na sensação de
+  navegação do Logseq), paleta e tipografia do padrão institucional
+  Jean Monnet/Erasmus+ (azul-escuro, azul, dourado como acento pontual,
+  serifada só em destaque). Três temáticas:
+  - **Execução Penal** — implementada. Três indicadores sintéticos
+    (taxa de ocupação, déficit de vagas, cobertura de informação) mais
+    um indicador com **dado real**: "Direitos penitenciários de mulheres
+    — Minas Gerais", a partir do SISDEPEN 2025/2 (ver `dados/sisdepen/`).
+  - **Direitos Humanos no Meio Ambiente Urbano** — `candidato`: sem
+    fonte registrada, sem indicador.
+  - **Direitos Humanos no Meio Ambiente Rural** — `candidato`, mesma
+    situação.
+  Cada temática tem sua própria seção Objeto / Ressalvas / Indicadores /
+  Fontes / Evidência.
+- **Minas Gerais em primeiro plano** — cada indicador comparativo abre
+  com um destaque do valor de MG; a lista completa (Brasil + 27 estados)
+  fica dentro de um `<details>` recolhido.
+- **Citação normativa linkada à fonte oficial** — Planalto para lei e
+  decreto federal, portal do STF para jurisprudência, Corte IDH/CNJ para
+  supervisão de cumprimento. Uma citação sem par verificado fica sem
+  link e ganha o selo "fonte oficial: a localizar" em vez de apontar
+  para qualquer coisa. Lista completa com a razão de cada escolha de
+  portal em `LINKS_OFICIAIS.md`.
+- **Advertência de dados sintéticos** — os três indicadores originais de
+  Execução Penal usam base sintética (gerada por função determinística,
+  não descreve nenhum estabelecimento real); isso está declarado na
+  própria página. O indicador de mulheres é a exceção: dado real,
+  selo "dado real" para não se confundir com os outros três.
 
-Arquivos:
-- `sisdepen_mg_bruto.csv` — MG, todas as ~1.780 colunas, todos os 19 ciclos
-- `sisdepen_mg_direitos_femininos_2025-2.csv` — recorte curado, ciclo mais recente
-- `sisdepen_mg_direitos_femininos_serie.csv` — mesmo recorte, agregado MG por ciclo (série 2016–2025)
-- `sisdepen_mg_resumo.json` — números-resumo, hash SHA-256 do `.xlsx` original, metodologia
-- `sisdepen_mg_direitos_femininos.py` — script que gera os quatro arquivos acima a partir do `.xlsx` do SISDEPEN (não incluído — 71 MB, enviado pelo usuário)
+## Estrutura do repositório
 
-## O que mudou nesta prévia
-
-1. **Minas Gerais em primeiro plano.** Cada indicador agora abre com um
-   destaque do valor de MG; a lista completa (Brasil + 27 estados) fica
-   dentro de um `<details>` recolhido — "Ver Minas Gerais ao lado do Brasil
-   e das demais unidades da federação".
-2. **Menu de Temáticas.** Uma barra lateral fixa (outline, inspirada na
-   fluidez de navegação do Logseq — expandir/colapsar por transição de
-   grade, sem JS medindo altura) substitui a página única. Três
-   temáticas:
-   - **Execução Penal** — implementada, com os três indicadores que já
-     existiam (taxa de ocupação, déficit de vagas, cobertura de informação).
-   - **Direitos Humanos no Meio Ambiente Urbano** — `candidato`: sem fonte
-     registrada, sem indicador. Mesma convenção de `docs/sistemas.md`.
-   - **Direitos Humanos no Meio Ambiente Rural** — `candidato`, mesma
-     situação.
-   Cada temática tem sua própria seção Objeto / Ressalvas / Indicadores /
-   Fontes / Evidência.
-3. **Citação normativa linkada à fonte oficial.** Toda citação (`CADH`,
-   `CF/88`, `Lei 7.210/1984`, `STF`, `Corte IDH`, `ONU`) que tem par
-   verificado vira link para o documento oficial — ver
-   `LINKS_OFICIAIS.md` para a lista completa e a data de conferência. Uma
-   citação sem par verificado fica sem link e ganha o selo visual
-   "fonte oficial: a localizar" em vez de apontar para qualquer coisa.
-   **Importante:** nem toda fonte oficial é o Planalto — só lei e decreto
-   federal moram lá. Jurisprudência do STF mora no portal do próprio STF;
-   resolução da Corte IDH mora em `corteidh.or.cr` (ou no índice que o CNJ
-   mantém sobre medidas provisórias relativas ao Brasil).
-
-## O que **não** mudou
-
-- O texto de cada indicador, pergunta, método e recusas — reaproveitado
-  literalmente do painel anterior.
-- Os dados continuam **sintéticos** (a mesma advertência grave aparece).
-- `estilo.css` original não foi editado — as regras novas (abas, destaque
-  MG, `<details>`, selo de citação pendente) vivem à parte, documentadas em
-  `modelo_html.py`, para facilitar a mesclagem de volta ao repositório real.
-
-## Como gerar a prévia
-
-```bash
-python3 montar_previa.py
+```
+index.html                 -- o produto. Editar direto; não há passo de build.
+README.md                  -- este arquivo
+LINKS_OFICIAIS.md          -- fonte oficial de cada citação normativa, com a razão da escolha
+INTEGRACAO_WORDPRESS.md    -- caminho recomendado para publicar isto num WordPress já hospedado
+dados/sisdepen/             -- evidência do único indicador com dado real
+  sisdepen_mg_bruto.csv                       -- MG, ~1.780 colunas, 19 ciclos (2016/2-2025/2)
+  sisdepen_mg_direitos_femininos_2025-2.csv   -- recorte curado, ciclo mais recente
+  sisdepen_mg_direitos_femininos_serie.csv    -- mesmo recorte, agregado MG por ciclo
+  sisdepen_mg_resumo.json                     -- números-resumo, hash SHA-256 do .xlsx original, metodologia
+  sisdepen_mg_direitos_femininos.py           -- script que regenera os quatro arquivos acima a partir
+                                                  de um novo .xlsx do SISDEPEN, quando o próximo ciclo sair
 ```
 
-Lê `base.html` + `estilo.css`, aplica as transformações e escreve
-`index.html` — um único arquivo, zero rede, abre offline, imprime.
-Nenhuma dependência fora da biblioteca padrão do Python.
+Removido nesta limpeza (cumpriram o papel de migração e não sobrevivem
+como arquivo à parte — o conteúdo de todos já está dentro de
+`index.html`): `base.html`, `estilo.css`, `modelo_html.py`,
+`montar_previa.py`, `previa-redesign-sidebar.html`. Se precisar
+recuperar algum, está no histórico do git.
 
-## O que falta para isto virar o painel real de novo
+## O que falta para isto virar o painel real (motor de dados completo)
 
 Este pacote **não inclui** `odh/core`, `odh/sources` nem
-`odh/data/*.toml` — só o que dá para reconstruir a partir do que foi
-enviado (o painel renderizado, a folha de estilo e o módulo de render). Para
-devolver a mudança de escopo ao repositório `observatorio-dh` real:
+`odh/data/*.toml` — o motor Python que geraria `index.html` a partir de
+dado real, ciclo a ciclo, vive no repositório `observatorio-dh` e não
+faz parte deste envio. Para devolver o que está aqui a esse repositório:
 
 1. Adicionar um campo `tema` (`execucao_penal` / `ambiente_urbano` /
-   `ambiente_rural`) a `IndicatorSpec` e a `SourceSpec`, e agrupar por tema
-   em `dashboard/render.py` em vez de listar tudo em sequência única.
+   `ambiente_rural`) a `IndicatorSpec` e a `SourceSpec`.
 2. Mapear ao menos um sistema candidato para cada tema novo em
    `docs/sistemas.md` antes de qualquer indicador — nenhum dado foi
    inventado aqui para essas duas temáticas, de propósito.
 3. Adicionar um campo `fonte_oficial_url` a `Obligation` (em
-   `odh/core/normative.py`) e usar o mapa de `LINKS_OFICIAIS.md` como
-   ponto de partida para popular `odh/data/normative/*.toml`.
-4. Mudar a ordenação padrão de cada série de indicador para priorizar MG,
-   com o resto da federação atrás de um elemento recolhível — mesma lógica
-   de `montar_previa.py`, portada para `dashboard/render.py`.
+   `odh/core/normative.py`) e usar `LINKS_OFICIAIS.md` como ponto de
+   partida para popular `odh/data/normative/*.toml`.
+4. Portar `dados/sisdepen/sisdepen_mg_direitos_femininos.py` para um
+   adaptador de `odh/sources`, para que o indicador de mulheres deixe de
+   ser um recorte manual e passe a atualizar sozinho a cada novo ciclo
+   do SISDEPEN.
 
 ## Licença
 

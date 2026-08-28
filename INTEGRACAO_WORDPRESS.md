@@ -26,12 +26,13 @@ Ou seja: colar o HTML inteiro num bloco pode funcionar hoje e quebrar
 amanhã com uma atualização de plugin de segurança ou mudança de papel —
 gargalo real, não hipotético.
 
-Há um segundo gargalo, menor mas certo: **CSS vaza**. `estilo.css` usa
-seletores genéricos por design (`a{...}`, `table{...}`, `h2{...}`) porque
-foi pensado para uma página sozinha. Colado dentro do WordPress, essas
-regras passam a competir com o CSS do tema inteiro — link, tabela e
-cabeçalho do resto do site podem mudar de aparência sem querer, e o
-inverso também: o CSS do tema pode sobrescrever o que o painel espera.
+Há um segundo gargalo, menor mas certo: **CSS vaza**. O `<style>` embutido
+em `index.html` usa seletores genéricos por design (`a{...}`, `table{...}`,
+`h2{...}`) porque foi pensado para uma página sozinha. Colado dentro do
+WordPress, essas regras passam a competir com o CSS do tema inteiro —
+link, tabela e cabeçalho do resto do site podem mudar de aparência sem
+querer, e o inverso também: o CSS do tema pode sobrescrever o que o
+painel espera.
 
 ## Três caminhos, em ordem de robustez
 
@@ -69,9 +70,10 @@ layout do WordPress.
 - Contras: exige FTP/SFTP ou gerenciador de arquivos do host para subir o
   template; se buscar do GitHub em tempo de requisição, cada visita paga
   uma chamada de rede a mais — cachear (transient de algumas horas) evita
-  isso. E ainda existe o gargalo de CSS: as regras genéricas de
-  `estilo.css` precisam ser prefixadas (ex.: `#observatorium-app a{...}` em vez
-  de `a{...}`) antes de conviver na mesma página que o tema.
+  isso. E ainda existe o gargalo de CSS: as regras genéricas do
+  `<style>` de `index.html` precisam ser prefixadas (ex.:
+  `#observatorium-app a{...}` em vez de `a{...}`) antes de conviver na
+  mesma página que o tema.
 
 ### 3. Colar direto no bloco HTML Personalizado (não recomendado como padrão)
 
@@ -86,5 +88,5 @@ Publicar o repositório com **GitHub Pages ligado** (Settings → Pages →
 Deploy from a branch, servindo `/` ou `/docs`) e embutir via `<iframe>`
 (caminho 1) para já ter algo publicado e estável. Se depois vier a
 necessidade de SEO ou de layout mais integrado ao resto do site, migrar
-para o template de página (caminho 2) — nessa hora, prefixar
-`estilo.css` é o primeiro passo, não o último.
+para o template de página (caminho 2) — nessa hora, prefixar o CSS
+embutido é o primeiro passo, não o último.
