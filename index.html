@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BR-MG-ObservatoriumHumanitarium — Observatório de Direitos Humanos · Minas Gerais</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>/* Observatório de Direitos Humanos — folha de estilo do painel.
  *
  * Programa visual: documento antes de interface. Times New Roman como corpo de
@@ -148,7 +149,7 @@ h4{
   margin:1.8rem 0 .5rem;
 }
 
-p{margin:.7rem 0}
+p{margin:.7rem 0;text-align:justify;hyphens:auto;-webkit-hyphens:auto}
 p:first-child{margin-top:0}
 
 a{color:inherit;text-decoration:underline;text-decoration-thickness:.5px;
@@ -382,6 +383,7 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
   .nota{break-inside:avoid}
   a{text-decoration:none}
   .sidebar{display:none}
+  .mapa-lateral{display:none}
   .shell{display:block}
   .conteudo-principal{max-width:none;padding:0}
   .tema-painel[hidden]{display:block !important}
@@ -399,13 +401,18 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
   .registro .lugar{font-size:.82rem}
   .registro .faixa{grid-column:1 / -1;padding-left:8.7rem;margin-top:-.1rem}
   .vazio{padding-left:8.7rem}
-  .shell{flex-direction:column}
+  .shell{grid-template-columns:1fr}
   .sidebar{
-    position:static;max-height:none;width:100%;flex:1 1 auto;
+    position:static;max-height:none;width:100%;
     border-right:none;border-bottom:2px solid var(--fio-forte);
     padding:1rem 0;
   }
   .conteudo-principal{padding:2rem 1.2rem 4rem}
+  .mapa-lateral{
+    position:static;max-height:none;width:100%;
+    border-left:none;border-top:2px solid var(--fio-forte);
+    padding:1.2rem;
+  }
 }
 
 
@@ -416,21 +423,21 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
    repositório real, mesclar aqui dentro de dashboard/estilo.css.
    ============================================================ */
 
-/* app-shell: barra lateral fixa (Temáticas) + coluna de conteúdo, no
-   lugar do menu superior de abas. Inspirado na fluidez de navegação em
-   outline do Logseq — cor e tipografia continuam as do padrão
-   institucional, só a interação de expandir/colapsar e trocar de
-   temática é que ganhou movimento. A barra encosta na margem esquerda
-   real da página — não há largura máxima nem centralização no .shell;
-   quem limita a largura de leitura é .conteudo-principal, sozinho. */
+/* app-shell: barra de Temáticas à esquerda + coluna de conteúdo +
+   barra de mapa interativo à direita, as duas encostadas nas margens
+   reais da página. Inspirado na fluidez de navegação em outline do
+   Logseq — cor e tipografia continuam as do padrão institucional, só
+   a interação (expandir/colapsar, mapa) é que ganhou movimento. Nem
+   .shell nem as duas barras têm largura máxima; quem limita a largura
+   de leitura é .conteudo-principal, sozinho, no meio. */
 
 .shell{
-  display:flex;
-  align-items:flex-start;
+  display:grid;
+  grid-template-columns:14.5rem 1fr 22rem;
+  align-items:start;
 }
 
 .sidebar{
-  flex:0 0 14.5rem;
   border-right:1px solid var(--fio);
   padding:1.6rem 0;
   position:sticky;
@@ -485,6 +492,88 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
   padding:3.2rem 2rem 6rem;
 }
 .conteudo-principal header{margin-top:0}
+
+/* -------------------------------------------------- mapa (barra direita) */
+
+.mapa-lateral{
+  border-left:1px solid var(--fio);
+  padding:1.6rem 1.3rem;
+  position:sticky;
+  top:0;
+  align-self:start;
+  max-height:100vh;
+  overflow-y:auto;
+  font-family:var(--sans);
+}
+.mapa-titulo{
+  font-size:.72rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--azul-escuro);
+  margin-bottom:.3rem;
+}
+.mapa-sub{
+  font-size:.78rem;
+  color:var(--discreto);
+  margin-bottom:1rem;
+  line-height:1.4;
+}
+#mapa-mg{
+  height:19rem;
+  border:1px solid var(--fio);
+  background:var(--fundo);
+}
+#mapa-mg .leaflet-popup-content-wrapper{
+  border-radius:0;
+  font-family:var(--sans);
+}
+#mapa-mg .leaflet-popup-content{font-size:.8rem;line-height:1.5;margin:.7rem .9rem}
+#mapa-mg .leaflet-popup-content strong{display:block;margin-bottom:.2rem;color:var(--azul-escuro)}
+#mapa-mg .leaflet-popup-content a{font-size:.76rem}
+.mapa-fallback{
+  padding:1rem .8rem;
+  font-size:.78rem;
+  color:var(--discreto);
+  font-style:italic;
+}
+.mapa-legenda{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.9rem;
+  margin:.9rem 0;
+  font-size:.72rem;
+  color:var(--discreto);
+}
+.mapa-legenda span{display:inline-flex;align-items:center;gap:.35rem}
+.ponto-legenda{
+  display:inline-block;width:9px;height:9px;border-radius:50%;
+  border:1px solid #fff;box-shadow:0 0 0 1px var(--fio-forte);
+}
+.mapa-insights{
+  margin:1.1rem 0 0;
+  padding-top:1rem;
+  border-top:1px solid var(--fio);
+}
+.mapa-insights h4{margin:0 0 .5rem}
+.mapa-insights ul{list-style:none;margin:0;padding:0}
+.mapa-insights li{
+  font-size:.8rem;
+  color:var(--discreto);
+  margin:.55rem 0;
+  padding-left:.8rem;
+  border-left:2px solid var(--azul);
+  line-height:1.45;
+}
+.mapa-insights li strong{color:var(--tinta)}
+.mapa-fonte-nota{
+  margin-top:1.1rem;
+  padding-top:.8rem;
+  border-top:1px solid var(--fio);
+  font-size:.68rem;
+  color:var(--discreto);
+  line-height:1.5;
+}
 
 .tema-painel[hidden]{display:none}
 
@@ -544,6 +633,8 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   padding:.8rem 1rem;
   border:1px solid var(--fio);
   background:var(--fundo);
+  text-align:justify;
+  hyphens:auto;
 }
 
 .card-vazio{
@@ -554,6 +645,8 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   color:var(--discreto);
   font-size:.92rem;
   max-width:44rem;
+  text-align:justify;
+  hyphens:auto;
 }
 .card-vazio strong{color:var(--tinta)}
 
@@ -605,7 +698,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
     <div class="tema ativo aberto" data-tema="tema-execucao-penal">
       <button type="button" class="tema-cabecalho" data-tema="tema-execucao-penal">
         <span class="seta">▸</span>
-        <span class="tema-titulo">Execução Penal</span>
+        <span class="tema-titulo">Manutenção do Sistema Penitenciário Brasileiro</span>
         <span class="selo-tema">implementado</span>
       </button>
       <div class="subitens-wrap"><div class="subitens">
@@ -661,7 +754,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
     <h1>BR-MG-ObservatoriumHumanitarium — Observatório de Direitos Humanos</h1>
     <p class="linha-fina">
       Recorte principal: Estado de Minas Gerais &nbsp;·&nbsp;
-      três temáticas — Execução Penal, Direitos Humanos no Meio Ambiente Urbano,
+      três temáticas — Manutenção do Sistema Penitenciário Brasileiro, Direitos Humanos no Meio Ambiente Urbano,
       Direitos Humanos no Meio Ambiente Rural &nbsp;·&nbsp;
       Brasil e demais unidades da federação aparecem como remissão opcional,
       não como página geral.
@@ -749,7 +842,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   <h4>O que este indicador não afirma</h4>
   <ul class="rol recusas"><li>Não afirma que houve violação de direito: afirma a distância entre o número declarado e o parâmetro citado. A qualificação jurídica é de quem aplica o direito.</li><li>Não mede condições materiais de detenção (saúde, alimentação, violência, acesso a defesa). Uma unidade dentro da capacidade pode violar a integridade pessoal de todos os modos que este número não vê.</li><li>Não ordena estados do &#x27;pior&#x27; para o &#x27;melhor&#x27;: as bases estaduais têm qualidades de preenchimento diferentes e a comparação direta esconde isso.</li><li>Não projeta valores futuros nem preenche ciclos não publicados.</li><li>&#x27;Vaga&#x27; é a capacidade que o próprio estabelecimento declara. O indicador não verifica se ela corresponde a espaço físico compatível com a dignidade da pessoa presa.</li></ul>
   <h4>Âncoras normativas</h4>
-  <div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 5.2, 1969</a></strong><span class="relacao">mede cumprimento de</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Não submeter ninguém a tortura nem a penas ou tratos cruéis, desumanos ou degradantes, e tratar toda pessoa privada de liberdade com o respeito devido à dignidade inerente ao ser humano.</p><p class="razao">O dever de tratar a pessoa presa com o respeito devido à dignidade inerente ao ser humano tem, na jurisprudência interamericana sobre unidades brasileiras, a superlotação como um de seus indicadores materiais recorrentes. A taxa de ocupação é a expressão numérica dessa condição declarada pelo próprio Estado.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 5.1, 1969</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Assegurar a toda pessoa o respeito à sua integridade física, psíquica e moral.</p><p class="razao">A integridade física, psíquica e moral é afetada pela densidade de ocupação, mas não se reduz a ela: o vínculo é de contexto, não de aferição direta.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.cnj.jus.br/poder-judiciario/relacoes-internacionais/monitoramento-e-fiscalizacao-das-decisoes-da-corte-idh/jurisprudencia-corte-idh/medidas-provisorias/" target="_blank" rel="noopener" class="lig-oficial" title="CNJ — índice de medidas provisórias da Corte IDH sobre o Brasil">Corte IDH, Assunto Complexo Penitenciário de Curado (Pernambuco) vs. Brasil, 2014</a></strong><span class="relacao">aciona</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Adotar de imediato as medidas necessárias para proteger a vida e a integridade pessoal das pessoas privadas de liberdade no complexo, incluindo a redução da superlotação.</p><p class="razao">A redução da superlotação integra o objeto das medidas provisórias sobre o complexo. O indicador estadual não substitui o acompanhamento por unidade exigido pela Corte, mas indica se o contexto em que a unidade opera melhorou ou piorou entre ciclos.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.cnj.jus.br/poder-judiciario/relacoes-internacionais/monitoramento-e-fiscalizacao-das-decisoes-da-corte-idh/jurisprudencia-corte-idh/medidas-provisorias/" target="_blank" rel="noopener" class="lig-oficial" title="CNJ — índice de medidas provisórias da Corte IDH sobre o Brasil">Corte IDH, Assunto Instituto Penal Plácido de Sá Carvalho (Rio de Janeiro) vs. Brasil, 2016</a></strong><span class="relacao">aciona</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Proteger a vida e a integridade das pessoas privadas de liberdade na unidade e enfrentar as condições de superlotação e de degradação do estabelecimento.</p><p class="razao">Mesma razão da entrada anterior, para a unidade do Rio de Janeiro. Serve como série de contexto ao monitoramento específico da medida.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/leis/l7210.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Lei 7.210/1984">Lei 7.210/1984 (LEP), art. 85, 1984</a></strong><span class="relacao">mede cumprimento de</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Manter o estabelecimento penal com lotação compatível com sua estrutura e finalidade.</p><p class="razao">O art. 85 da LEP enuncia o dever em termos que a taxa de ocupação afere quase literalmente: lotação compatível com a estrutura do estabelecimento. Valor acima de 1,00 é, no vocabulário da própria lei, lotação incompatível com a capacidade que a administração declarou.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Constituição Federal">CF/88, art. 5º, XLIX, 1988</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Assegurar aos presos o respeito à integridade física e moral.</p><p class="razao">O parâmetro constitucional interno converge com o interamericano sobre o mesmo objeto. Registrar as duas âncoras permite observar o acoplamento entre os dois sistemas a partir de um único número.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.unodc.org/documents/justice-and-prison-reform/Nelson_Mandela_Rules-P-ebook.pdf" target="_blank" rel="noopener" class="lig-oficial" title="UNODC — texto oficial das Regras de Mandela">ONU — Regras de Nelson Mandela, Regra 13, 2015</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Assegurar que os locais de alojamento atendam a exigências de saúde, considerando clima, volume de ar, área mínima, iluminação, aquecimento e ventilação.</p><p class="razao">As Regras de Mandela fixam condições mínimas de alojamento em termos físicos (área, ar, ventilação) que a taxa de ocupação não mede. O vínculo serve para lembrar que estar dentro da capacidade declarada não equivale a cumprir a regra.</p></div>
+  <div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 5.2, 1969</a></strong><span class="relacao">mede cumprimento de</span></div><p class="obrigacao">Não submeter ninguém a tortura nem a penas ou tratos cruéis, desumanos ou degradantes, e tratar toda pessoa privada de liberdade com o respeito devido à dignidade inerente ao ser humano.</p><p class="razao">O dever de tratar a pessoa presa com o respeito devido à dignidade inerente ao ser humano tem, na jurisprudência interamericana sobre unidades brasileiras, a superlotação como um de seus indicadores materiais recorrentes. A taxa de ocupação é a expressão numérica dessa condição declarada pelo próprio Estado.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 5.1, 1969</a></strong><span class="relacao">contextualiza</span></div><p class="obrigacao">Assegurar a toda pessoa o respeito à sua integridade física, psíquica e moral.</p><p class="razao">A integridade física, psíquica e moral é afetada pela densidade de ocupação, mas não se reduz a ela: o vínculo é de contexto, não de aferição direta.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.cnj.jus.br/poder-judiciario/relacoes-internacionais/monitoramento-e-fiscalizacao-das-decisoes-da-corte-idh/jurisprudencia-corte-idh/medidas-provisorias/" target="_blank" rel="noopener" class="lig-oficial" title="CNJ — índice de medidas provisórias da Corte IDH sobre o Brasil">Corte IDH, Assunto Complexo Penitenciário de Curado (Pernambuco) vs. Brasil, 2014</a></strong><span class="relacao">aciona</span></div><p class="obrigacao">Adotar de imediato as medidas necessárias para proteger a vida e a integridade pessoal das pessoas privadas de liberdade no complexo, incluindo a redução da superlotação.</p><p class="razao">A redução da superlotação integra o objeto das medidas provisórias sobre o complexo. O indicador estadual não substitui o acompanhamento por unidade exigido pela Corte, mas indica se o contexto em que a unidade opera melhorou ou piorou entre ciclos.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.cnj.jus.br/poder-judiciario/relacoes-internacionais/monitoramento-e-fiscalizacao-das-decisoes-da-corte-idh/jurisprudencia-corte-idh/medidas-provisorias/" target="_blank" rel="noopener" class="lig-oficial" title="CNJ — índice de medidas provisórias da Corte IDH sobre o Brasil">Corte IDH, Assunto Instituto Penal Plácido de Sá Carvalho (Rio de Janeiro) vs. Brasil, 2016</a></strong><span class="relacao">aciona</span></div><p class="obrigacao">Proteger a vida e a integridade das pessoas privadas de liberdade na unidade e enfrentar as condições de superlotação e de degradação do estabelecimento.</p><p class="razao">Mesma razão da entrada anterior, para a unidade do Rio de Janeiro. Serve como série de contexto ao monitoramento específico da medida.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/leis/l7210.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Lei 7.210/1984">Lei 7.210/1984 (LEP), art. 85, 1984</a></strong><span class="relacao">mede cumprimento de</span></div><p class="obrigacao">Manter o estabelecimento penal com lotação compatível com sua estrutura e finalidade.</p><p class="razao">O art. 85 da LEP enuncia o dever em termos que a taxa de ocupação afere quase literalmente: lotação compatível com a estrutura do estabelecimento. Valor acima de 1,00 é, no vocabulário da própria lei, lotação incompatível com a capacidade que a administração declarou.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Constituição Federal">CF/88, art. 5º, XLIX, 1988</a></strong><span class="relacao">contextualiza</span></div><p class="obrigacao">Assegurar aos presos o respeito à integridade física e moral.</p><p class="razao">O parâmetro constitucional interno converge com o interamericano sobre o mesmo objeto. Registrar as duas âncoras permite observar o acoplamento entre os dois sistemas a partir de um único número.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.unodc.org/documents/justice-and-prison-reform/Nelson_Mandela_Rules-P-ebook.pdf" target="_blank" rel="noopener" class="lig-oficial" title="UNODC — texto oficial das Regras de Mandela">ONU — Regras de Nelson Mandela, Regra 13, 2015</a></strong><span class="relacao">contextualiza</span></div><p class="obrigacao">Assegurar que os locais de alojamento atendam a exigências de saúde, considerando clima, volume de ar, área mínima, iluminação, aquecimento e ventilação.</p><p class="razao">As Regras de Mandela fixam condições mínimas de alojamento em termos físicos (área, ar, ventilação) que a taxa de ocupação não mede. O vínculo serve para lembrar que estar dentro da capacidade declarada não equivale a cumprir a regra.</p></div>
 </section>
 <section class="indicador" id="deficit_vagas">
   <h3>Déficit de vagas</h3>
@@ -762,7 +855,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   <h4>O que este indicador não afirma</h4>
   <ul class="rol recusas"><li>Não é uma recomendação de construir presídios: a diferença pode ser fechada tanto por vagas novas quanto por redução da população presa, e o número não decide entre as duas.</li><li>Não distribui o déficit por unidade: um agregado estadual equilibrado pode conter unidades em colapso.</li><li>Não considera pessoas em carceragens de delegacia quando o ciclo não as informa.</li></ul>
   <h4>Âncoras normativas</h4>
-  <div class="dever"><div class="fonte-legal"><strong><a href="https://portal.stf.jus.br/processos/detalhe.asp?incidente=4783560" target="_blank" rel="noopener" class="lig-oficial" title="Portal STF — acompanhamento processual">STF, ADPF 347, 2015</a></strong><span class="relacao">mede cumprimento de</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Reconhecida a violação massiva e estrutural de direitos fundamentais no sistema prisional, adotar e executar plano de superação, com medidas verificáveis e prazos.</p><p class="razao">O plano de superação do estado de coisas inconstitucional trabalha com metas verificáveis. O déficit agregado por unidade da federação é uma das grandezas sobre as quais essas metas incidem, e sua série entre ciclos mostra a direção do movimento.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.stf.jus.br/arquivo/cms/jurisprudenciaSumulaVinculante/anexo/2020SumulaVinculante1a29e31a58Resumidocapaecontedo.pdf" target="_blank" rel="noopener" class="lig-oficial" title="Portal STF — texto compilado das súmulas vinculantes">STF, Súmula Vinculante 56, 2016</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Não manter o condenado em regime prisional mais gravoso por ausência de estabelecimento penal adequado; observar os parâmetros do RE 641.320.</p><p class="razao">A súmula proíbe converter falta de vaga em regime mais gravoso. O déficit não mede esse desvio, mas dimensiona a pressão que o produz.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 5.6, 1969</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Orientar as penas privativas de liberdade à reforma e à readaptação social dos condenados.</p><p class="razao">A finalidade de reforma e readaptação social pressupõe condições materiais que o déficit ajuda a dimensionar, sem aferir diretamente.</p></div>
+  <div class="dever"><div class="fonte-legal"><strong><a href="https://portal.stf.jus.br/processos/detalhe.asp?incidente=4783560" target="_blank" rel="noopener" class="lig-oficial" title="Portal STF — acompanhamento processual">STF, ADPF 347, 2015</a></strong><span class="relacao">mede cumprimento de</span></div><p class="obrigacao">Reconhecida a violação massiva e estrutural de direitos fundamentais no sistema prisional, adotar e executar plano de superação, com medidas verificáveis e prazos.</p><p class="razao">O plano de superação do estado de coisas inconstitucional trabalha com metas verificáveis. O déficit agregado por unidade da federação é uma das grandezas sobre as quais essas metas incidem, e sua série entre ciclos mostra a direção do movimento.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.stf.jus.br/arquivo/cms/jurisprudenciaSumulaVinculante/anexo/2020SumulaVinculante1a29e31a58Resumidocapaecontedo.pdf" target="_blank" rel="noopener" class="lig-oficial" title="Portal STF — texto compilado das súmulas vinculantes">STF, Súmula Vinculante 56, 2016</a></strong><span class="relacao">contextualiza</span></div><p class="obrigacao">Não manter o condenado em regime prisional mais gravoso por ausência de estabelecimento penal adequado; observar os parâmetros do RE 641.320.</p><p class="razao">A súmula proíbe converter falta de vaga em regime mais gravoso. O déficit não mede esse desvio, mas dimensiona a pressão que o produz.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 5.6, 1969</a></strong><span class="relacao">contextualiza</span></div><p class="obrigacao">Orientar as penas privativas de liberdade à reforma e à readaptação social dos condenados.</p><p class="razao">A finalidade de reforma e readaptação social pressupõe condições materiais que o déficit ajuda a dimensionar, sem aferir diretamente.</p></div>
 </section>
 <section class="indicador" id="cobertura_informacao">
   <h3>Estabelecimentos na base do ciclo</h3>
@@ -775,7 +868,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   <h4>O que este indicador não afirma</h4>
   <ul class="rol recusas"><li>Não mede a veracidade do que foi informado, apenas a presença da informação.</li><li>Não sabe quantos estabelecimentos existem de fato: só enxerga os que aparecem na base publicada. A ausência de uma unidade inteira é invisível aqui.</li></ul>
   <h4>Âncoras normativas</h4>
-  <div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 2, 1969</a></strong><span class="relacao">mede cumprimento de</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Adotar as medidas legislativas ou de outra natureza necessárias para tornar efetivos os direitos e liberdades da Convenção.</p><p class="razao">O dever de adotar disposições de direito interno para tornar efetivos os direitos convencionais alcança a produção de informação pública confiável: sem dado, não há supervisão de cumprimento possível. A cobertura da base é a medida mais direta desse pressuposto.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.corteidh.or.cr/docs/casos/articulos/seriec_333_por.pdf" target="_blank" rel="noopener" class="lig-oficial" title="Corte IDH — sentença do caso (texto oficial)">Corte IDH, Caso Favela Nova Brasília vs. Brasil, 2017</a></strong><span class="relacao">contextualiza</span><span class="relacao pendente">redação a conferir</span></div><p class="obrigacao">Investigar de forma independente e efetiva as mortes decorrentes de intervenção policial e produzir e publicar dados oficiais sobre essas mortes.</p><p class="razao">O caso firma, em matéria de letalidade policial, o dever de produzir e publicar dados oficiais. O vínculo aqui é analógico e serve de contexto: a exigência de informação pública como condição de supervisão não é estranha ao sistema interamericano. Não se afirma que o caso vincule diretamente a base prisional.</p></div>
+  <div class="dever"><div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/decreto/d0678.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Decreto 678/1992">CADH, art. 2, 1969</a></strong><span class="relacao">mede cumprimento de</span></div><p class="obrigacao">Adotar as medidas legislativas ou de outra natureza necessárias para tornar efetivos os direitos e liberdades da Convenção.</p><p class="razao">O dever de adotar disposições de direito interno para tornar efetivos os direitos convencionais alcança a produção de informação pública confiável: sem dado, não há supervisão de cumprimento possível. A cobertura da base é a medida mais direta desse pressuposto.</p></div><div class="dever"><div class="fonte-legal"><strong><a href="https://www.corteidh.or.cr/docs/casos/articulos/seriec_333_por.pdf" target="_blank" rel="noopener" class="lig-oficial" title="Corte IDH — sentença do caso (texto oficial)">Corte IDH, Caso Favela Nova Brasília vs. Brasil, 2017</a></strong><span class="relacao">contextualiza</span></div><p class="obrigacao">Investigar de forma independente e efetiva as mortes decorrentes de intervenção policial e produzir e publicar dados oficiais sobre essas mortes.</p><p class="razao">O caso firma, em matéria de letalidade policial, o dever de produzir e publicar dados oficiais. O vínculo aqui é analógico e serve de contexto: a exigência de informação pública como condição de supervisão não é estranha ao sistema interamericano. Não se afirma que o caso vincule diretamente a base prisional.</p></div>
 </section>
 
     <h3 id="mulheres-execucao-penal" style="margin-top:2.2rem">
@@ -862,7 +955,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
       lado do dever jurídico correspondente.</p>
       <p>Nenhum sistema de informação foi mapeado e registrado como fonte
       candidata ainda. Isso é pré-requisito para qualquer indicador entrar aqui,
-      na mesma convenção usada pela temática Execução Penal: um sistema entra
+      na mesma convenção usada pela temática Manutenção do Sistema Penitenciário Brasileiro: um sistema entra
       como <strong>Candidato</strong> em <span class="mono">docs/sistemas.md</span>
       antes de virar adaptador.</p>
     </div>
@@ -878,7 +971,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
     temática.</strong> Um indicador só entra aqui depois que uma fonte é mapeada
     como candidata, ganha adaptador testado e recebe vínculo normativo com
     justificativa escrita — o mesmo processo que já valeu para a temática
-    Execução Penal.</div>
+    Manutenção do Sistema Penitenciário Brasileiro.</div>
 
     <h2 id="fontes-ambiente-urbano">Fontes</h2>
     <div class="card-vazio">Nenhuma fonte registrada.</div>
@@ -932,7 +1025,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
       <div>
         <h5>BR-MG-ObservatoriumHumanitarium</h5>
         <p>Observatório de segunda ordem para o Estado de Minas Gerais, organizado
-        em temáticas: Execução Penal, Direitos Humanos no Meio Ambiente Urbano e
+        em temáticas: Manutenção do Sistema Penitenciário Brasileiro, Direitos Humanos no Meio Ambiente Urbano e
         Direitos Humanos no Meio Ambiente Rural. Confronta a autodescrição estatal
         com o dever jurídico correspondente. Não afirma violação de direito.</p>
       </div>
@@ -960,6 +1053,44 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   </footer>
 
   </main>
+
+  <aside class="mapa-lateral">
+    <div class="mapa-titulo">Mapa · mulheres no sistema penitenciário</div>
+    <p class="mapa-sub">46 municípios de Minas Gerais com mulheres em custódia
+    física, ciclo 2025/2 do SISDEPEN. Clique num ponto.</p>
+
+    <div id="mapa-mg"></div>
+
+    <div class="mapa-legenda">
+      <span><i class="ponto-legenda" style="background:var(--azul)"></i> sem infraestrutura materna declarada</span>
+      <span><i class="ponto-legenda" style="background:var(--dourado)"></i> com berçário e/ou cela para gestante</span>
+    </div>
+
+    <div class="mapa-insights">
+      <h4 class="mapa-titulo">Achados</h4>
+      <ul>
+        <li><strong>3.135</strong> mulheres em custódia física nesses 46 municípios
+        — mais <strong>1.733</strong> sob monitoramento eletrônico domiciliar, sem
+        endereço de estabelecimento físico.</li>
+        <li>De 46 municípios, só <strong>1</strong> — Vespasiano — declara cela
+        adequada para gestante e berçário. <strong>Nenhum</strong> declara creche.</li>
+        <li><strong>Belo Horizonte</strong> concentra o maior número absoluto
+        (590 mulheres, 2 estabelecimentos), sem infraestrutura materna declarada
+        em nenhum dos dois.</li>
+      </ul>
+    </div>
+
+    <div class="mapa-fonte-nota">
+      Coordenadas são aproximadas (sede do município, não o endereço exato do
+      estabelecimento) e não foram conferidas contra uma fonte cartográfica
+      única. Contagens vêm de
+      <span class="mono">dados/sisdepen/sisdepen_mg_bruto.csv</span>, mesma base
+      do indicador "Direitos penitenciários de mulheres" em Indicadores. Mapa
+      requer rede (tiles CARTO/OpenStreetMap) — o resto da página funciona
+      offline.
+    </div>
+  </aside>
+
 </div>
 
 <script>
@@ -994,10 +1125,10 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   });
 
   var INDICE = [
-    {"titulo": "Objeto", "tipo": "seção · execução penal", "ancora": "objeto-execucao-penal", "tema": "tema-execucao-penal"},
-    {"titulo": "O que estas fontes não medem", "tipo": "seção · execução penal", "ancora": "ressalvas-execucao-penal", "tema": "tema-execucao-penal"},
-    {"titulo": "Fontes", "tipo": "seção · execução penal", "ancora": "fontes-execucao-penal", "tema": "tema-execucao-penal"},
-    {"titulo": "Evidência", "tipo": "seção · execução penal", "ancora": "evidencia-execucao-penal", "tema": "tema-execucao-penal"},
+    {"titulo": "Objeto", "tipo": "seção · sistema penitenciário", "ancora": "objeto-execucao-penal", "tema": "tema-execucao-penal"},
+    {"titulo": "O que estas fontes não medem", "tipo": "seção · sistema penitenciário", "ancora": "ressalvas-execucao-penal", "tema": "tema-execucao-penal"},
+    {"titulo": "Fontes", "tipo": "seção · sistema penitenciário", "ancora": "fontes-execucao-penal", "tema": "tema-execucao-penal"},
+    {"titulo": "Evidência", "tipo": "seção · sistema penitenciário", "ancora": "evidencia-execucao-penal", "tema": "tema-execucao-penal"},
     {"titulo": "Taxa de ocupação carcerária", "tipo": "indicador", "ancora": "taxa_ocupacao", "tema": "tema-execucao-penal"},
     {"titulo": "Déficit de vagas", "tipo": "indicador", "ancora": "deficit_vagas", "tema": "tema-execucao-penal"},
     {"titulo": "Estabelecimentos na base do ciclo", "tipo": "indicador", "ancora": "cobertura_informacao", "tema": "tema-execucao-penal"},
@@ -1052,6 +1183,117 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   document.addEventListener("click", function(ev){
     if (!ev.target.closest(".busca")) caixa.hidden = true;
   });
+
+  window.ativarTema = ativarTema;
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){
+  // Município → mulheres em custódia física, MG, ciclo 2025/2 do SISDEPEN.
+  // Fonte: dados/sisdepen/sisdepen_mg_bruto.csv. Coordenadas são
+  // aproximadas (sede do município), ver nota na barra de mapa.
+  var MUNICIPIOS = [
+    {nome:"Belo Horizonte",ibge:3106200,lat:-19.9167,lon:-43.9345,pop:590,estabs:2,bercario:false,creche:false,celaGestante:false},
+    {nome:"Juiz de Fora",ibge:3136702,lat:-21.7642,lon:-43.3467,pop:306,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Ribeirão das Neves",ibge:3154606,lat:-19.7669,lon:-44.0867,pop:295,estabs:2,bercario:false,creche:false,celaGestante:false},
+    {nome:"Timóteo",ibge:3168705,lat:-19.5828,lon:-42.6467,pop:240,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Santa Rita do Sapucaí",ibge:3159605,lat:-22.25,lon:-45.7,pop:198,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Uberlândia",ibge:3170206,lat:-18.9186,lon:-48.2772,pop:180,estabs:2,bercario:false,creche:false,celaGestante:false},
+    {nome:"Governador Valadares",ibge:3127701,lat:-18.8511,lon:-41.9494,pop:161,estabs:3,bercario:false,creche:false,celaGestante:false},
+    {nome:"Teófilo Otoni",ibge:3168606,lat:-17.8578,lon:-41.505,pop:123,estabs:2,bercario:false,creche:false,celaGestante:false},
+    {nome:"Presidente Olegário",ibge:3153400,lat:-18.4178,lon:-46.4178,pop:97,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Três Corações",ibge:3169307,lat:-21.6944,lon:-45.2578,pop:83,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Conselheiro Lafaiete",ibge:3118304,lat:-20.6608,lon:-43.7864,pop:79,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Pará de Minas",ibge:3147105,lat:-19.8611,lon:-44.6081,pop:78,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Divinópolis",ibge:3122306,lat:-20.1389,lon:-44.8839,pop:70,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"São João Del Rei",ibge:3162500,lat:-21.1356,lon:-44.2619,pop:69,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Montes Claros",ibge:3143302,lat:-16.735,lon:-43.8617,pop:68,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Frutal",ibge:3127107,lat:-20.0247,lon:-48.94,pop:67,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Uberaba",ibge:3170107,lat:-19.7483,lon:-47.9319,pop:67,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Rio Piracicaba",ibge:3155702,lat:-19.8975,lon:-43.1794,pop:56,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Alfenas",ibge:3101607,lat:-21.4292,lon:-45.9475,pop:52,estabs:2,bercario:false,creche:false,celaGestante:false},
+    {nome:"Itaúna",ibge:3133808,lat:-20.0725,lon:-44.5786,pop:38,estabs:2,bercario:false,creche:false,celaGestante:false},
+    {nome:"Pouso Alegre",ibge:3152501,lat:-22.23,lon:-45.9364,pop:38,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Unaí",ibge:3170404,lat:-16.3578,lon:-46.9061,pop:35,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Vespasiano",ibge:3171204,lat:-19.6928,lon:-43.9236,pop:31,estabs:2,bercario:true,creche:false,celaGestante:true},
+    {nome:"João Pinheiro",ibge:3136306,lat:-17.7425,lon:-46.1731,pop:26,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Barbacena",ibge:3105608,lat:-21.2256,lon:-43.7736,pop:21,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Curvelo",ibge:3120904,lat:-18.7558,lon:-44.4308,pop:16,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Capelinha",ibge:3112307,lat:-17.6975,lon:-42.5142,pop:11,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Diamantina",ibge:3121605,lat:-18.2428,lon:-43.6008,pop:8,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Araxá",ibge:3104007,lat:-19.5928,lon:-46.9408,pop:4,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Iturama",ibge:3134400,lat:-19.7267,lon:-50.1975,pop:3,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Passos",ibge:3147907,lat:-20.7181,lon:-46.6106,pop:3,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"São Joaquim de Bicas",ibge:3162922,lat:-19.9581,lon:-44.3128,pop:2,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Almenara",ibge:3101706,lat:-16.1811,lon:-40.6969,pop:2,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Conselheiro Pena",ibge:3118403,lat:-19.1636,lon:-41.4681,pop:2,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Janaúba",ibge:3135100,lat:-15.8019,lon:-43.3106,pop:2,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Serro",ibge:3167103,lat:-18.6042,lon:-43.3789,pop:2,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"São Lourenço",ibge:3163706,lat:-22.1167,lon:-45.05,pop:2,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Varginha",ibge:3170701,lat:-21.555,lon:-45.43,pop:2,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Andradas",ibge:3102605,lat:-22.0644,lon:-46.5686,pop:1,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Bom Despacho",ibge:3107406,lat:-19.7439,lon:-45.2517,pop:1,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Itajubá",ibge:3132404,lat:-22.4256,lon:-45.4528,pop:1,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Malacacheta",ibge:3139201,lat:-17.8531,lon:-42.0681,pop:1,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Paracatu",ibge:3147006,lat:-17.2219,lon:-46.8747,pop:1,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Pirapora",ibge:3151206,lat:-17.3458,lon:-44.9422,pop:1,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Piumhi",ibge:3151503,lat:-20.4728,lon:-45.9611,pop:1,estabs:1,bercario:false,creche:false,celaGestante:false},
+    {nome:"Ubá",ibge:3169901,lat:-21.1189,lon:-42.9436,pop:1,estabs:1,bercario:false,creche:false,celaGestante:false}
+  ];
+
+  function irParaIndicador(){
+    if (window.ativarTema) window.ativarTema("tema-execucao-penal");
+    var alvo = document.getElementById("mulheres-execucao-penal");
+    if (alvo) alvo.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+  window.irParaIndicador = irParaIndicador;
+
+  var elMapa = document.getElementById("mapa-mg");
+  if (!elMapa) return;
+
+  var map = null, pronto = false;
+  try {
+    map = L.map("mapa-mg", {scrollWheelZoom:false});
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+      subdomains: "abcd",
+      maxZoom: 18,
+    }).addTo(map);
+    var pontos = MUNICIPIOS.map(function(m){ return [m.lat, m.lon]; });
+    map.fitBounds(pontos, {padding:[14,14]});
+    pronto = true;
+  } catch (e) {
+    elMapa.innerHTML = '<div class="mapa-fallback">O mapa não carregou — sem acesso, daqui, aos tiles do CARTO/OpenStreetMap. Os achados abaixo continuam valendo; abra este arquivo com rede para ver os pontos.</div>';
+  }
+
+  if (pronto) {
+    MUNICIPIOS.forEach(function(m){
+      var destaque = m.bercario || m.creche || m.celaGestante;
+      var raio = Math.max(4, Math.min(16, 3 + Math.sqrt(m.pop) * 0.65));
+      var marcador = L.circleMarker([m.lat, m.lon], {
+        radius: raio,
+        color: "#fff",
+        weight: 1.2,
+        fillColor: destaque ? "#ffd617" : "#004494",
+        fillOpacity: 0.88,
+      }).addTo(map);
+
+      var infra = [];
+      infra.push("cela gestante: " + (m.celaGestante ? "sim" : "não"));
+      infra.push("berçário: " + (m.bercario ? "sim" : "não"));
+      infra.push("creche: " + (m.creche ? "sim" : "não"));
+
+      var html =
+        "<strong>" + m.nome + "</strong>" +
+        m.pop.toLocaleString("pt-BR") + " mulheres · " + m.estabs +
+        (m.estabs === 1 ? " estabelecimento" : " estabelecimentos") + "<br>" +
+        infra.join(" · ") + "<br>" +
+        '<a href="#" onclick="irParaIndicador(); return false;">Ver indicador completo →</a>';
+      marcador.bindPopup(html);
+    });
+  }
 })();
 </script>
 </body>

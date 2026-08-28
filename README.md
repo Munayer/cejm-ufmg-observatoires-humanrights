@@ -1,10 +1,11 @@
 # BR-MG-ObservatoriumHumanitarium — Observatório de Direitos Humanos
 
-**`index.html` é o produto.** Um único arquivo, zero rede, zero build,
-zero dependência — abre offline, imprime, pode ser hospedado como está
-(GitHub Pages, qualquer host estático). Todo o resto neste repositório é
-evidência ou documentação que sustenta o que está dentro dele; nada
-precisa ser processado para o site funcionar.
+**`index.html` é o produto.** Um único arquivo, pode ser hospedado como
+está (GitHub Pages, qualquer host estático). Quase tudo funciona
+offline — a única exceção é o mapa interativo na barra direita, que
+precisa de rede para os tiles (ver ressalva abaixo). Todo o resto neste
+repositório é evidência ou documentação que sustenta o que está dentro
+dele; nada precisa ser processado para o site funcionar.
 
 Recorte principal: **Estado de Minas Gerais**. Brasil e demais unidades da
 federação aparecem como remissão opcional dentro de cada indicador, não
@@ -14,23 +15,44 @@ como página geral.
 Python interno do motor de dados real, quando reintegrado, segue `odh`;
 nome de marca fica fora dos identificadores de código.)*
 
+## Ressalva de rede: o mapa não é offline
+
+Todo o resto do documento é texto e CSS embutidos — abre sem internet.
+A barra de mapa (`.mapa-lateral`, direita) é a exceção deliberada: ela
+carrega a biblioteca Leaflet de um CDN (cdnjs) e os tiles do basemap de
+`basemaps.cartocdn.com` (dados OpenStreetMap). Sem rede, o mapa mostra
+um aviso e o resto da página segue funcionando normalmente — o `try/catch`
+em torno da inicialização do Leaflet garante essa degradação graciosa,
+no mesmo padrão do protótipo `minerva-map` que serviu de referência para
+esta barra.
+
 ## O que tem em `index.html`
 
-- **Barra lateral de Temáticas** — outline fluida (expandir/colapsar por
-  transição de grade, sem JS medindo altura — inspirado na sensação de
-  navegação do Logseq), paleta e tipografia do padrão institucional
-  Jean Monnet/Erasmus+ (azul-escuro, azul, dourado como acento pontual,
-  serifada só em destaque). Três temáticas:
-  - **Execução Penal** — implementada. Três indicadores sintéticos
-    (taxa de ocupação, déficit de vagas, cobertura de informação) mais
-    um indicador com **dado real**: "Direitos penitenciários de mulheres
-    — Minas Gerais", a partir do SISDEPEN 2025/2 (ver `dados/sisdepen/`).
+- **Barra lateral esquerda de Temáticas** — outline fluida
+  (expandir/colapsar por transição de grade, sem JS medindo altura —
+  inspirado na sensação de navegação do Logseq), paleta e tipografia do
+  padrão institucional Jean Monnet/Erasmus+ (azul-escuro, azul, dourado
+  como acento pontual, serifada só em destaque). Três temáticas:
+  - **Manutenção do Sistema Penitenciário Brasileiro** — implementada.
+    Três indicadores sintéticos (taxa de ocupação, déficit de vagas,
+    cobertura de informação) mais um indicador com **dado real**:
+    "Direitos penitenciários de mulheres — Minas Gerais", a partir do
+    SISDEPEN 2025/2 (ver `dados/sisdepen/`).
   - **Direitos Humanos no Meio Ambiente Urbano** — `candidato`: sem
     fonte registrada, sem indicador.
   - **Direitos Humanos no Meio Ambiente Rural** — `candidato`, mesma
     situação.
   Cada temática tem sua própria seção Objeto / Ressalvas / Indicadores /
   Fontes / Evidência.
+- **Barra lateral direita de mapa** — Leaflet + basemap CARTO light,
+  46 municípios de MG com mulheres em custódia física (SISDEPEN 2025/2),
+  círculo proporcional à população feminina, destaque dourado para o
+  único município (Vespasiano) com qualquer infraestrutura materna
+  declarada. Cada popup linka de volta ao indicador de mulheres na
+  coluna central (troca de temática + rolagem automática). Três achados
+  fixos abaixo do mapa; coordenadas são aproximadas (sede do município),
+  não conferidas contra uma fonte cartográfica única — ressalva
+  declarada na própria barra.
 - **Minas Gerais em primeiro plano** — cada indicador comparativo abre
   com um destaque do valor de MG; a lista completa (Brasil + 27 estados)
   fica dentro de um `<details>` recolhido.
@@ -41,10 +63,14 @@ nome de marca fica fora dos identificadores de código.)*
   para qualquer coisa. Lista completa com a razão de cada escolha de
   portal em `LINKS_OFICIAIS.md`.
 - **Advertência de dados sintéticos** — os três indicadores originais de
-  Execução Penal usam base sintética (gerada por função determinística,
-  não descreve nenhum estabelecimento real); isso está declarado na
-  própria página. O indicador de mulheres é a exceção: dado real,
-  selo "dado real" para não se confundir com os outros três.
+  Manutenção do Sistema Penitenciário Brasileiro usam base sintética
+  (gerada por função determinística, não descreve nenhum estabelecimento
+  real); isso está declarado na própria página. O indicador de mulheres
+  é a exceção: dado real, selo "dado real" para não se confundir com os
+  outros três.
+- **Parágrafos justificados** (`text-align:justify` + `hyphens:auto`) em
+  todo texto corrido — miolo dos indicadores, deveres normativos, cartões
+  vazios das temáticas candidatas.
 
 ## Estrutura do repositório
 
@@ -60,6 +86,8 @@ dados/sisdepen/             -- evidência do único indicador com dado real
   sisdepen_mg_resumo.json                     -- números-resumo, hash SHA-256 do .xlsx original, metodologia
   sisdepen_mg_direitos_femininos.py           -- script que regenera os quatro arquivos acima a partir
                                                   de um novo .xlsx do SISDEPEN, quando o próximo ciclo sair
+  gerar_dados_mapa.py                         -- regenera o array de dados da barra de mapa a partir
+                                                  de sisdepen_mg_bruto.csv (mesma lógica, por município)
 ```
 
 Removido nesta limpeza (cumpriram o papel de migração e não sobrevivem
@@ -75,8 +103,9 @@ Este pacote **não inclui** `odh/core`, `odh/sources` nem
 dado real, ciclo a ciclo, vive no repositório `observatorio-dh` e não
 faz parte deste envio. Para devolver o que está aqui a esse repositório:
 
-1. Adicionar um campo `tema` (`execucao_penal` / `ambiente_urbano` /
-   `ambiente_rural`) a `IndicatorSpec` e a `SourceSpec`.
+1. Adicionar um campo `tema` (`manutencao_sistema_penitenciario` /
+   `ambiente_urbano` / `ambiente_rural`) a `IndicatorSpec` e a
+   `SourceSpec`.
 2. Mapear ao menos um sistema candidato para cada tema novo em
    `docs/sistemas.md` antes de qualquer indicador — nenhum dado foi
    inventado aqui para essas duas temáticas, de propósito.
