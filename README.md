@@ -15,6 +15,26 @@ Python interno segue `odh`; nome de marca continua fora dos
 identificadores de código, mesma lógica já adotada antes para não forçar
 refatoração.)*
 
+## Primeiro dado real do projeto
+
+`dados/sisdepen/` contém o primeiro recorte com **dado real**, não sintético:
+o SISDEPEN "base única" (nacional, 19 ciclos, 2016/2–2025/2), filtrado para
+Minas Gerais e cruzado para os campos desagregados por sexo feminino que
+correspondem a um direito já positivado (LEP, CF/88, legislação
+previdenciária) — não todo dado sobre mulheres, só o que tem endereço
+normativo. Metodologia, critério bloco a bloco e hash de evidência do
+arquivo original em `dados/sisdepen/sisdepen_mg_resumo.json`. O indicador
+"Direitos penitenciários de mulheres — Minas Gerais" no `index.html` usa
+esse recorte e está marcado com o selo "dado real" para não se confundir
+com os três indicadores sintéticos ao lado.
+
+Arquivos:
+- `sisdepen_mg_bruto.csv` — MG, todas as ~1.780 colunas, todos os 19 ciclos
+- `sisdepen_mg_direitos_femininos_2025-2.csv` — recorte curado, ciclo mais recente
+- `sisdepen_mg_direitos_femininos_serie.csv` — mesmo recorte, agregado MG por ciclo (série 2016–2025)
+- `sisdepen_mg_resumo.json` — números-resumo, hash SHA-256 do `.xlsx` original, metodologia
+- `sisdepen_mg_direitos_femininos.py` — script que gera os quatro arquivos acima a partir do `.xlsx` do SISDEPEN (não incluído — 71 MB, enviado pelo usuário)
+
 ## O que mudou nesta prévia
 
 1. **Minas Gerais em primeiro plano.** Cada indicador agora abre com um

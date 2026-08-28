@@ -15,6 +15,9 @@ publica aquele tipo de ato.
 | Corte IDH, Plácido de Sá Carvalho | mesmo índice do CNJ acima | mesma razão |
 | Corte IDH, Favela Nova Brasília | [corteidh.or.cr — sentença do caso (PDF)](https://www.corteidh.or.cr/docs/casos/articulos/seriec_333_por.pdf) | Sentença de mérito, documento único (não é medida provisória com múltiplas resoluções) |
 | ONU — Regras de Nelson Mandela | [UNODC — texto oficial (PDF)](https://www.unodc.org/documents/justice-and-prison-reform/Nelson_Mandela_Rules-P-ebook.pdf) | Texto das Regras publicado pelo UNODC, órgão que as administra |
+| LEP, art. 83 §2º / art. 89 (mulheres — creche, berçário) | [planalto.gov.br/ccivil_03/leis/l7210.htm](https://www.planalto.gov.br/ccivil_03/leis/l7210.htm) | Mesma lei federal — Planalto/Casa Civil |
+| Lei 12.433/2011 (remição de pena pelo estudo) | [planalto.gov.br — L12433](https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12433.htm) | Lei federal — Planalto/Casa Civil |
+| Lei 8.213/1991, art. 80 (auxílio-reclusão) | [planalto.gov.br — L8213 (consolidada)](https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm) | Lei federal — Planalto/Casa Civil |
 
 ## O que ainda falta
 

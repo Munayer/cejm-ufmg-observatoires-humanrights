@@ -153,6 +153,37 @@ a.lig-oficial::after{content:" \\2197";font-size:.82em}
 }
 .card-vazio strong{color:var(--tinta)}
 
+.selo-dado-real{
+  display:inline-block;
+  font-size:.62rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  color:#fff;
+  background:var(--azul-escuro);
+  padding:.15rem .5rem;
+  margin-left:.5rem;
+  vertical-align:middle;
+}
+.grade-stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));
+  gap:1px;
+  background:var(--fio);
+  border:1px solid var(--fio);
+  margin:1.2rem 0;
+  max-width:52rem;
+}
+.cartao-stat{background:var(--papel);padding:1rem 1.1rem}
+.cartao-stat .valor{
+  display:block;font-size:1.4rem;font-weight:700;
+  color:var(--azul-escuro);font-family:var(--mono);
+}
+.cartao-stat .rotulo{
+  display:block;font-size:.76rem;color:var(--discreto);
+  margin-top:.25rem;line-height:1.35;
+}
+
 @media print{
   .sidebar{display:none}
   .shell{display:block}
@@ -321,11 +352,52 @@ MODELO = """<!doctype html>
     <h2 id="indicadores-execucao-penal">Indicadores</h2>
     __EXECUCAO_PENAL_INDICADORES__
 
+    <h3 id="mulheres-execucao-penal" style="margin-top:2.2rem">
+      Direitos penitenciários de mulheres — Minas Gerais
+      <span class="selo-dado-real">dado real — SISDEPEN 2025/2</span>
+    </h3>
+    <div class="miolo">
+      <p>Diferente dos três indicadores acima, o que segue <strong>não é
+      sintético</strong>. São os 216 estabelecimentos de Minas Gerais que
+      responderam ao ciclo 2025/2 do SISDEPEN (base nacional, 19 ciclos desde
+      2016/2), recortados para os campos que a própria pesquisa desagrega por
+      sexo feminino e que correspondem a um direito já positivado — na Lei de
+      Execução Penal, na Constituição ou em legislação previdenciária. Nem todo
+      dado sobre mulheres entrou neste recorte: capacidade física, saúde,
+      educação e trabalho entraram; composição do quadro de servidores e módulos
+      sem corte de gênero na pesquisa ficaram de fora. Metodologia completa,
+      hash de evidência do arquivo original e a lista de blocos incluídos estão
+      em <span class="mono">dados/sisdepen/sisdepen_mg_resumo.json</span>.</p>
+    </div>
+    <div class="grade-stats">
+      <div class="cartao-stat"><span class="valor">4.868</span><span class="rotulo">mulheres em custódia em MG — 3.135 em cela física + 1.733 em monitoramento eletrônico domiciliar</span></div>
+      <div class="cartao-stat"><span class="valor">1 / 55</span><span class="rotulo">estabelecimentos com cela ou dormitório adequado para gestantes</span></div>
+      <div class="cartao-stat"><span class="valor">1 / 55</span><span class="rotulo">estabelecimentos com berçário ou centro de referência materno-infantil</span></div>
+      <div class="cartao-stat"><span class="valor">0 / 55</span><span class="rotulo">estabelecimentos com creche</span></div>
+      <div class="cartao-stat"><span class="valor">697 / 2.213</span><span class="rotulo">mulheres sentenciadas com atestado de pena atualizado no prontuário</span></div>
+      <div class="cartao-stat"><span class="valor">3</span><span class="rotulo">óbitos femininos registrados no período</span></div>
+    </div>
+    <div class="dever">
+      <div class="fonte-legal"><strong><a href="https://www.planalto.gov.br/ccivil_03/leis/l7210.htm" target="_blank" rel="noopener" class="lig-oficial" title="Planalto — Lei 7.210/1984">LEP, art. 83, §2º e art. 89</a></strong><span class="relacao">mede cumprimento de</span></div>
+      <p class="obrigacao">Os estabelecimentos penais destinados a mulheres serão
+      dotados de berçário; havendo regime fechado, também de seção para
+      gestante e parturiente e de creche.</p>
+      <p class="razao">Dos 55 estabelecimentos de Minas Gerais que declararam
+      população feminina em cela física no ciclo 2025/2, 1 declara berçário e
+      nenhum declara creche. O SISDEPEN não distingue, neste campo, quantos dos
+      54 restantes estão em regime que dispensaria a creche — essa leitura
+      fica para quem tiver acesso à listagem completa por estabelecimento em
+      <span class="mono">dados/sisdepen/sisdepen_mg_direitos_femininos_2025-2.csv</span>.</p>
+    </div>
+
     <h2 id="fontes-execucao-penal">Fontes</h2>
     <div class="rolagem">
       <table>
         <thead><tr><th>Fonte</th><th>Órgão</th><th>Periodicidade</th><th>Licença</th></tr></thead>
-        <tbody><tr><td>Base sintética em formato SISDEPEN (demonstração)</td><td>odh (gerada localmente)</td><td>sob demanda</td><td>—</td></tr></tbody>
+        <tbody>
+        <tr><td>Base sintética em formato SISDEPEN (demonstração)</td><td>odh (gerada localmente)</td><td>sob demanda</td><td>—</td></tr>
+        <tr><td>SISDEPEN — base única, ciclo 2025/2, filtrada para MG</td><td>SENAPPEN/Ministério da Justiça</td><td>semestral</td><td>dado público</td></tr>
+        </tbody>
       </table>
     </div>
 
@@ -337,7 +409,10 @@ MODELO = """<!doctype html>
       <table>
         <thead><tr><th>Instante (UTC)</th><th>Endereço</th><th>Origem</th>
         <th>SHA-256</th><th>Bytes</th></tr></thead>
-        <tbody><tr><td class="mono">2026-08-22T13:35:17+00:00</td><td class="mono"><a href="odh://synthetic/sisdepen/2025-S1">odh://synthetic/sisdepen/2025-S1</a></td><td>synthetic</td><td class="mono">6bb8655e804d5997…</td><td class="numero mono">7.423</td></tr></tbody>
+        <tbody>
+        <tr><td class="mono">2026-08-22T13:35:17+00:00</td><td class="mono"><a href="odh://synthetic/sisdepen/2025-S1">odh://synthetic/sisdepen/2025-S1</a></td><td>synthetic</td><td class="mono">6bb8655e804d5997…</td><td class="numero mono">7.423</td></tr>
+        <tr><td class="mono">2026-03-25T16:34:20+00:00</td><td class="mono">sisdepen_baseunica_2025-2_25032026-163420.xlsx</td><td>upload do usuário</td><td class="mono">2a7bf61e9c055705…</td><td class="numero mono">70.985.233</td></tr>
+        </tbody>
       </table>
     </div>
     <h4>Âncora do livro de evidência</h4>
@@ -500,6 +575,7 @@ MODELO = """<!doctype html>
     {"titulo": "Taxa de ocupação carcerária", "tipo": "indicador", "ancora": "taxa_ocupacao", "tema": "tema-execucao-penal"},
     {"titulo": "Déficit de vagas", "tipo": "indicador", "ancora": "deficit_vagas", "tema": "tema-execucao-penal"},
     {"titulo": "Estabelecimentos na base do ciclo", "tipo": "indicador", "ancora": "cobertura_informacao", "tema": "tema-execucao-penal"},
+    {"titulo": "Direitos penitenciários de mulheres — Minas Gerais", "tipo": "indicador · dado real", "ancora": "mulheres-execucao-penal", "tema": "tema-execucao-penal"},
     {"titulo": "Direitos Humanos no Meio Ambiente Urbano", "tipo": "temática · candidato", "ancora": "objeto-ambiente-urbano", "tema": "tema-ambiente-urbano"},
     {"titulo": "Direitos Humanos no Meio Ambiente Rural", "tipo": "temática · candidato", "ancora": "objeto-ambiente-rural", "tema": "tema-ambiente-rural"}
   ];
