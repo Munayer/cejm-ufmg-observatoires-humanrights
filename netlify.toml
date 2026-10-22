@@ -1,0 +1,5 @@
+# Netlify publica só a pasta site/. O resto do repositório (dados/,
+# scripts, documentação) fica no GitHub como evidência, fora do ar.
+[build]
+  publish = "site"
+  command = ""

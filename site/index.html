@@ -681,6 +681,32 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   margin-top:.25rem;line-height:1.35;
 }
 
+/* ------------------------------------------------- responsivo (shell) */
+/* Precisa vir depois de .shell / .sidebar / .mapa-lateral: a regra de
+   720px mais acima perdia para elas por ordem de fonte, e no celular as
+   três colunas se sobrepunham. */
+
+@media (max-width:1100px){
+  .shell{grid-template-columns:14.5rem 1fr}
+  .mapa-lateral{
+    grid-column:1 / -1;
+    position:static;max-height:none;
+    border-left:none;border-top:2px solid var(--fio-forte);
+    padding:1.6rem 2rem;
+  }
+}
+
+@media (max-width:720px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{
+    position:static;max-height:none;width:100%;
+    border-right:none;border-bottom:2px solid var(--fio-forte);
+    padding:1rem 0;
+  }
+  .conteudo-principal{padding:2rem 1rem 4rem}
+  .mapa-lateral{padding:1.2rem 1rem}
+  .conteudo-principal table{display:block;overflow-x:auto;max-width:100%}
+  .mono{overflow-wrap:anywhere}
 }
 </style>
 </head>

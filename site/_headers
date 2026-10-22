@@ -1,0 +1,7 @@
+# Cabeçalhos HTTP do Netlify (substitui o .htaccess da Hostinger).
+# HTTPS e compressão o Netlify já faz sozinho.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Cache-Control: public, max-age=0, must-revalidate

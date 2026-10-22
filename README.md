@@ -1,7 +1,8 @@
 # BR-MG-ObservatoriumHumanitarium — Observatório de Direitos Humanos
 
-**`index.html` é o produto.** Um único arquivo, pode ser hospedado como
-está (GitHub Pages, qualquer host estático). Quase tudo funciona
+**`site/index.html` é o produto.** Um único arquivo, publicado pelo
+Netlify a partir da pasta `site/` (ver `netlify.toml`); serve também em
+qualquer host estático. Quase tudo funciona
 offline — a única exceção é o mapa interativo na barra direita, que
 precisa de rede para os tiles (ver ressalva abaixo). Todo o resto neste
 repositório é evidência ou documentação que sustenta o que está dentro
@@ -75,7 +76,9 @@ esta barra.
 ## Estrutura do repositório
 
 ```
-index.html                 -- o produto. Editar direto; não há passo de build.
+site/index.html            -- o produto. Editar direto; não há passo de build.
+site/_headers              -- cabeçalhos HTTP aplicados pelo Netlify
+netlify.toml               -- diz ao Netlify para publicar só site/ (dados/ e scripts ficam fora do ar)
 README.md                  -- este arquivo
 LINKS_OFICIAIS.md          -- fonte oficial de cada citação normativa, com a razão da escolha
 INTEGRACAO_WORDPRESS.md    -- caminho recomendado para publicar isto num WordPress já hospedado
