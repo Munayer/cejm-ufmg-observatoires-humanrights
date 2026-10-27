@@ -1,5 +1,5 @@
-# Cabeçalhos HTTP do site (formato _headers do Netlify, que o Codeberg
-# Pages também lê). HTTPS e compressão o servidor já faz sozinho.
+# Cabeçalhos HTTP do site, publicado pelo Codeberg Pages (que lê o
+# formato _headers do Netlify). HTTPS e compressão o servidor já faz.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
