@@ -1,5 +1,5 @@
-# Cabeçalhos HTTP do Netlify (substitui o .htaccess da Hostinger).
-# HTTPS e compressão o Netlify já faz sozinho.
+# Cabeçalhos HTTP do site (formato _headers do Netlify, que o Codeberg
+# Pages também lê). HTTPS e compressão o servidor já faz sozinho.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

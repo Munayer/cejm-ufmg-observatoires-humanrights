@@ -1,0 +1,3 @@
+# Redirecionamentos do Codeberg Pages (formato _redirects do Netlify).
+# O "!" faz a regra valer mesmo quando a pagina existe.
+//www.observatoriodhcejm.com/* https://observatoriodhcejm.com/:splat 301!
