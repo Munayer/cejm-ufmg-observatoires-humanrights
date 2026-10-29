@@ -71,6 +71,10 @@ python dados/sisdepen/gerar_dados_mapa.py > municipios_mapa.js.txt   # array MUN
 - Cada temática tem as mesmas seções, com ids `objeto-*`, `ressalvas-*`,
   `indicadores-*`, `fontes-*`, `evidencia-*`. Uma temática nova segue esse
   padrão e entra também no índice de busca do primeiro `<script>`.
+- Rodapé `footer.rodape-eu`, no fim da coluna central, com o emblema
+  oficial "Cofinanciado pela União Europeia" (`site/assets/eu/`) e o aviso
+  da EACEA. O emblema é a única cor do rodapé e fica como está: não
+  recolorir, não recortar, não baixar de 56 px de altura.
 - Segundo `<script>`: Leaflet, dentro de `try/catch` para degradar sem rede.
 
 ## Regras de conteúdo

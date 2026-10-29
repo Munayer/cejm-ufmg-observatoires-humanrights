@@ -364,6 +364,25 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
 .rodape-interno p{margin:0;font-size:.86rem;color:var(--discreto)}
 .rodape-interno ul{list-style:none;margin:0;padding:0}
 .rodape-interno li{margin:.3rem 0;font-size:.86rem;color:var(--discreto)}
+
+/* Cofinanciamento da UE. Emblema e aviso são os oficiais, sem modificação;
+   o emblema é a única cor do rodapé, fica longe de outras marcas e tem
+   pelo menos 1 cm de altura (aqui, 56 px). Disposição do rodapé do
+   Observatório SOMA, com flex-wrap no lugar do ponto de quebra: a coluna
+   central muda de largura com as barras laterais, não só com a tela. */
+.rodape-financiamento{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:1.25rem 2.5rem;
+  padding:1.6rem 0;
+  border-top:1px solid var(--fio);
+}
+.emblema-ue{flex:none;display:block;height:56px;width:auto;margin:.5rem 0}
+.rodape-financiamento div{flex:1 1 20rem}
+.rodape-financiamento p{margin:0;max-width:70ch;font-size:.86rem;color:var(--discreto)}
+.rodape-financiamento p + p{margin-top:.6rem}
+
 .rodape-base{
   padding-top:1rem;
   border-top:1px solid var(--fio);
@@ -707,6 +726,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   .mapa-lateral{padding:1.2rem 1rem}
   .conteudo-principal table{display:block;overflow-x:auto;max-width:100%}
   .mono{overflow-wrap:anywhere}
+  .rodape-financiamento{gap:.9rem}
 }
 </style>
 </head>
@@ -1070,6 +1090,19 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
           <li><span class="mono">odh normativo --pendentes</span> — citações a conferir</li>
           <li><span class="mono">odh fontes</span> — fontes registradas</li>
         </ul>
+      </div>
+    </div>
+    <div class="rodape-financiamento">
+      <img class="emblema-ue" src="assets/eu/co-funded-pt-pos.png"
+           alt="Cofinanciado pela União Europeia" width="237" height="56">
+      <div>
+        <p>Cofinanciado pela União Europeia. Os pontos de vista e as opiniões
+        expressas são as do(s) autor(es) e não refletem necessariamente a posição
+        da União Europeia ou da Agência de Execução Europeia da Educação e da
+        Cultura (EACEA). Nem a União Europeia nem a EACEA podem ser tidas como
+        responsáveis por essas opiniões.</p>
+        <p>Projeto desenvolvido no âmbito das Ações Jean Monnet do programa
+        Erasmus+.</p>
       </div>
     </div>
     <div class="rodape-base">

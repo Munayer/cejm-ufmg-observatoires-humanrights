@@ -74,11 +74,20 @@ esta barra.
 - **Parágrafos justificados** (`text-align:justify` + `hyphens:auto`) em
   todo texto corrido — miolo dos indicadores, deveres normativos, cartões
   vazios das temáticas candidatas.
+- **Rodapé de cofinanciamento da União Europeia** — emblema oficial
+  "Cofinanciado pela União Europeia" (`site/assets/eu/co-funded-pt-pos.png`,
+  sem modificação, 56 px de altura, única cor do rodapé), aviso da EACEA e
+  menção às Ações Jean Monnet do programa Erasmus+, como pedem as
+  orientações da Comissão Europeia para beneficiários de financiamento da
+  UE. Mesmo texto do rodapé do Observatório SOMA, com o emblema ao lado do
+  aviso (acima dele quando a coluna fica estreita). O emblema é o único
+  arquivo local que a página carrega além de si mesma.
 
 ## Estrutura do repositório
 
 ```
 site/index.html            -- o produto. Editar direto; não há passo de build.
+site/assets/eu/            -- emblema oficial "Cofinanciado pela União Europeia" do rodapé, sem modificação
 site/_headers              -- cabeçalhos HTTP do site (formato Netlify, lido pelo Codeberg Pages)
 site/_redirects            -- www.observatoriodhcejm.com redireciona para o domínio principal
 netlify.toml               -- resto da hospedagem anterior no Netlify; sai quando o site lá for apagado
@@ -126,3 +135,9 @@ faz parte deste envio. Para devolver o que está aqui a esse repositório:
 ## Licença
 
 Pretendida: AGPL-3.0-or-later — mesma decisão do repositório original.
+
+O emblema em `site/assets/eu/` não entra na licença do projeto: é o
+arquivo oficial da Comissão Europeia (o mesmo do Observatório SOMA, só
+redimensionado), e o seu uso segue as orientações da Comissão para
+beneficiários de financiamento da UE e o acordo administrativo com o
+Conselho da Europa (JO C 271 de 8.9.2012).
