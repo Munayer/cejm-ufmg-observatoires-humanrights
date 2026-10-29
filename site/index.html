@@ -710,6 +710,19 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
 
 @media (max-width:1100px){
   .shell{grid-template-columns:14.5rem 1fr}
+  /* Item sticky de grade só para no fim do contêiner, não no fim da
+     própria linha, e aqui o mapa ocupa a linha de baixo inteira. Para
+     não descer por cima dele, a barra de Temáticas vira só a coluna,
+     esticada até o fim da linha e sem rolagem própria, e quem gruda é o
+     miolo, que para onde ela acaba. */
+  .sidebar{
+    position:static;align-self:stretch;max-height:none;overflow:visible;
+    padding:0;border-right:none;
+  }
+  .sidebar-miolo{
+    position:sticky;top:0;max-height:100vh;overflow-y:auto;
+    padding:1.6rem 0;border-right:1px solid var(--fio);
+  }
   .mapa-lateral{
     grid-column:1 / -1;
     position:static;max-height:none;
@@ -720,10 +733,15 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
 
 @media (max-width:720px){
   .shell{grid-template-columns:1fr}
+  /* Uma coluna só: a barra volta a ser a caixa e o miolo, um bloco comum. */
   .sidebar{
-    position:static;max-height:none;width:100%;
+    position:static;max-height:none;width:100%;overflow-y:auto;
     border-right:none;border-bottom:2px solid var(--fio-forte);
     padding:1rem 0;
+  }
+  .sidebar-miolo{
+    position:static;max-height:none;overflow:visible;
+    padding:0;border-right:none;
   }
   .conteudo-principal{padding:2rem 1rem 4rem}
   .mapa-lateral{padding:1.2rem 1rem}
@@ -737,62 +755,64 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
 <div class="shell">
 
   <nav class="sidebar" aria-label="Temáticas">
-    <div class="marca">BR-MG-ObservatoriumHumanitarium</div>
-    <div class="busca">
-      <input type="text" id="campo-busca" placeholder="Buscar indicador, dever, fonte…"
-             autocomplete="off" aria-label="Buscar no painel">
-      <div id="resultados-busca" class="resultados-busca" hidden></div>
-    </div>
+    <div class="sidebar-miolo">
+      <div class="marca">BR-MG-ObservatoriumHumanitarium</div>
+      <div class="busca">
+        <input type="text" id="campo-busca" placeholder="Buscar indicador, dever, fonte…"
+               autocomplete="off" aria-label="Buscar no painel">
+        <div id="resultados-busca" class="resultados-busca" hidden></div>
+      </div>
 
-    <div class="tema ativo aberto" data-tema="tema-execucao-penal">
-      <button type="button" class="tema-cabecalho" data-tema="tema-execucao-penal">
-        <span class="seta">▸</span>
-        <span class="tema-titulo">Manutenção do Sistema Penitenciário Brasileiro</span>
-        <span class="selo-tema">implementado</span>
-      </button>
-      <div class="subitens-wrap"><div class="subitens">
-        <ul>
-          <li><a href="#objeto-execucao-penal" data-tema="tema-execucao-penal">Objeto</a></li>
-          <li><a href="#ressalvas-execucao-penal" data-tema="tema-execucao-penal">Ressalvas</a></li>
-          <li><a href="#indicadores-execucao-penal" data-tema="tema-execucao-penal">Indicadores</a></li>
-          <li><a href="#fontes-execucao-penal" data-tema="tema-execucao-penal">Fontes</a></li>
-          <li><a href="#evidencia-execucao-penal" data-tema="tema-execucao-penal">Evidência</a></li>
-        </ul>
-      </div></div>
-    </div>
+      <div class="tema ativo aberto" data-tema="tema-execucao-penal">
+        <button type="button" class="tema-cabecalho" data-tema="tema-execucao-penal">
+          <span class="seta">▸</span>
+          <span class="tema-titulo">Manutenção do Sistema Penitenciário Brasileiro</span>
+          <span class="selo-tema">implementado</span>
+        </button>
+        <div class="subitens-wrap"><div class="subitens">
+          <ul>
+            <li><a href="#objeto-execucao-penal" data-tema="tema-execucao-penal">Objeto</a></li>
+            <li><a href="#ressalvas-execucao-penal" data-tema="tema-execucao-penal">Ressalvas</a></li>
+            <li><a href="#indicadores-execucao-penal" data-tema="tema-execucao-penal">Indicadores</a></li>
+            <li><a href="#fontes-execucao-penal" data-tema="tema-execucao-penal">Fontes</a></li>
+            <li><a href="#evidencia-execucao-penal" data-tema="tema-execucao-penal">Evidência</a></li>
+          </ul>
+        </div></div>
+      </div>
 
-    <div class="tema" data-tema="tema-ambiente-urbano">
-      <button type="button" class="tema-cabecalho" data-tema="tema-ambiente-urbano">
-        <span class="seta">▸</span>
-        <span class="tema-titulo">Direitos Humanos no Meio Ambiente Urbano</span>
-        <span class="selo-tema">candidato</span>
-      </button>
-      <div class="subitens-wrap"><div class="subitens">
-        <ul>
-          <li><a href="#objeto-ambiente-urbano" data-tema="tema-ambiente-urbano">Objeto</a></li>
-          <li><a href="#ressalvas-ambiente-urbano" data-tema="tema-ambiente-urbano">Ressalvas</a></li>
-          <li><a href="#indicadores-ambiente-urbano" data-tema="tema-ambiente-urbano">Indicadores</a></li>
-          <li><a href="#fontes-ambiente-urbano" data-tema="tema-ambiente-urbano">Fontes</a></li>
-          <li><a href="#evidencia-ambiente-urbano" data-tema="tema-ambiente-urbano">Evidência</a></li>
-        </ul>
-      </div></div>
-    </div>
+      <div class="tema" data-tema="tema-ambiente-urbano">
+        <button type="button" class="tema-cabecalho" data-tema="tema-ambiente-urbano">
+          <span class="seta">▸</span>
+          <span class="tema-titulo">Direitos Humanos no Meio Ambiente Urbano</span>
+          <span class="selo-tema">candidato</span>
+        </button>
+        <div class="subitens-wrap"><div class="subitens">
+          <ul>
+            <li><a href="#objeto-ambiente-urbano" data-tema="tema-ambiente-urbano">Objeto</a></li>
+            <li><a href="#ressalvas-ambiente-urbano" data-tema="tema-ambiente-urbano">Ressalvas</a></li>
+            <li><a href="#indicadores-ambiente-urbano" data-tema="tema-ambiente-urbano">Indicadores</a></li>
+            <li><a href="#fontes-ambiente-urbano" data-tema="tema-ambiente-urbano">Fontes</a></li>
+            <li><a href="#evidencia-ambiente-urbano" data-tema="tema-ambiente-urbano">Evidência</a></li>
+          </ul>
+        </div></div>
+      </div>
 
-    <div class="tema" data-tema="tema-ambiente-rural">
-      <button type="button" class="tema-cabecalho" data-tema="tema-ambiente-rural">
-        <span class="seta">▸</span>
-        <span class="tema-titulo">Direitos Humanos no Meio Ambiente Rural</span>
-        <span class="selo-tema">candidato</span>
-      </button>
-      <div class="subitens-wrap"><div class="subitens">
-        <ul>
-          <li><a href="#objeto-ambiente-rural" data-tema="tema-ambiente-rural">Objeto</a></li>
-          <li><a href="#ressalvas-ambiente-rural" data-tema="tema-ambiente-rural">Ressalvas</a></li>
-          <li><a href="#indicadores-ambiente-rural" data-tema="tema-ambiente-rural">Indicadores</a></li>
-          <li><a href="#fontes-ambiente-rural" data-tema="tema-ambiente-rural">Fontes</a></li>
-          <li><a href="#evidencia-ambiente-rural" data-tema="tema-ambiente-rural">Evidência</a></li>
-        </ul>
-      </div></div>
+      <div class="tema" data-tema="tema-ambiente-rural">
+        <button type="button" class="tema-cabecalho" data-tema="tema-ambiente-rural">
+          <span class="seta">▸</span>
+          <span class="tema-titulo">Direitos Humanos no Meio Ambiente Rural</span>
+          <span class="selo-tema">candidato</span>
+        </button>
+        <div class="subitens-wrap"><div class="subitens">
+          <ul>
+            <li><a href="#objeto-ambiente-rural" data-tema="tema-ambiente-rural">Objeto</a></li>
+            <li><a href="#ressalvas-ambiente-rural" data-tema="tema-ambiente-rural">Ressalvas</a></li>
+            <li><a href="#indicadores-ambiente-rural" data-tema="tema-ambiente-rural">Indicadores</a></li>
+            <li><a href="#fontes-ambiente-rural" data-tema="tema-ambiente-rural">Fontes</a></li>
+            <li><a href="#evidencia-ambiente-rural" data-tema="tema-ambiente-rural">Evidência</a></li>
+          </ul>
+        </div></div>
+      </div>
     </div>
   </nav>
 
