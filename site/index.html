@@ -394,24 +394,6 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
   color:var(--discreto);
 }
 
-/* ------------------------------------------------------------ impressão */
-
-@media print{
-  :root{--papel:#fff;--tinta:#000;--discreto:#444;--fio:#bbb;
-        --fio-forte:#777;--barra:#000;--barra-fundo:#ddd}
-  body{font-size:10.5pt}
-  .indicador{break-inside:avoid}
-  .nota{break-inside:avoid}
-  a{text-decoration:none}
-  .sidebar{display:none}
-  .mapa-lateral{display:none}
-  .shell{display:block}
-  .conteudo-principal{max-width:none;padding:0}
-  .tema-painel[hidden]{display:block !important}
-  details.ver-todos{display:block}
-  details.ver-todos > summary{display:none}
-}
-
 /* --------------------------------------------------------------- estreito */
 
 @media (max-width:720px){
@@ -750,6 +732,28 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   .conteudo-principal table{display:block;overflow-x:auto;max-width:100%}
   .mono{overflow-wrap:anywhere}
   .rodape-financiamento{gap:.9rem}
+}
+
+/* ------------------------------------------------------------ impressão */
+/* Fica no fim da folha: antes das regras de .shell, das barras e do
+   responsivo, perdia para elas por ordem de fonte, e a impressão saía com
+   as barras escondidas mas a grade de três colunas de pé, o texto
+   espremido na primeira coluna. */
+
+@media print{
+  :root{--papel:#fff;--tinta:#000;--discreto:#444;--fio:#bbb;
+        --fio-forte:#777;--barra:#000;--barra-fundo:#ddd}
+  body{font-size:10.5pt}
+  .indicador{break-inside:avoid}
+  .nota{break-inside:avoid}
+  a{text-decoration:none}
+  .sidebar{display:none}
+  .mapa-lateral{display:none}
+  .shell{display:block}
+  .conteudo-principal{max-width:none;padding:0}
+  .tema-painel[hidden]{display:block !important}
+  details.ver-todos{display:block}
+  details.ver-todos > summary{display:none}
 }
 </style>
 </head>
