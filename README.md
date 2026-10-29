@@ -22,12 +22,27 @@ nome de marca fica fora dos identificadores de código.)*
 
 Todo o resto do documento é texto e CSS embutidos — abre sem internet.
 A barra de mapa (`.mapa-lateral`, direita) é a exceção deliberada: ela
-carrega a biblioteca Leaflet de um CDN (cdnjs) e os tiles do basemap de
-`basemaps.cartocdn.com` (dados OpenStreetMap). Sem rede, o mapa mostra
-um aviso e o resto da página segue funcionando normalmente — o `try/catch`
-em torno da inicialização do Leaflet garante essa degradação graciosa,
-no mesmo padrão do protótipo `minerva-map` que serviu de referência para
-esta barra.
+carrega a biblioteca Leaflet de um CDN (cdnjs) e os tiles do próprio
+OpenStreetMap (`tile.openstreetmap.org`), passados para cinza claro por
+um filtro CSS. Sem rede, o mapa mostra um aviso e o resto da página
+segue funcionando normalmente — o `try/catch` em torno da inicialização
+do Leaflet garante essa degradação graciosa, no mesmo padrão do
+protótipo `minerva-map` que serviu de referência para esta barra.
+
+O fundo vinha antes da CARTO (`basemaps.cartocdn.com`, estilo light).
+Em 29 de outubro de 2026 todo tile da CARTO chegava com a marca
+"API KEY REQUIRED", também no site publicado: a CARTO passou a exigir
+chave de API nos basemaps (termos de 29 de setembro de 2026), e sem
+chave devolve essa imagem, qualquer que seja o `Referer`. Chave no
+código não serve, porque o repositório é público e ela iria junto para
+o ar. Os tiles do OpenStreetMap dispensam chave, mas seguem a
+[política de uso](https://operations.osmfoundation.org/policies/tiles/)
+dos servidores da OSMF: crédito visível no mapa e cabeçalho `Referer` em
+cada pedido. Por isso o mapa só funciona com a página servida por
+http(s) — aberta direto do disco (`file://`), o navegador não manda
+`Referer` e o OSM devolve tiles de "Access blocked" — e a
+`Referrer-Policy` de `site/_headers` não pode ficar mais restrita que
+`strict-origin-when-cross-origin`.
 
 ## O que tem em `index.html`
 
@@ -47,7 +62,7 @@ esta barra.
     situação.
   Cada temática tem sua própria seção Objeto / Ressalvas / Indicadores /
   Fontes / Evidência.
-- **Barra lateral direita de mapa** — Leaflet + basemap CARTO light,
+- **Barra lateral direita de mapa** — Leaflet + OpenStreetMap em cinza,
   46 municípios de MG com mulheres em custódia física (SISDEPEN 2025/2),
   círculo proporcional à população feminina, destaque dourado para o
   único município (Vespasiano) com qualquer infraestrutura materna

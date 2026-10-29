@@ -44,8 +44,8 @@ git push origin main
 
 O `subtree split` é determinístico: sem mudança em `site/`, o ramo `pages`
 não muda e nada é republicado.
-O mapa precisa de rede (Leaflet no cdnjs, tiles da CARTO); o resto abre
-offline e deve continuar abrindo.
+O mapa precisa de rede (Leaflet no cdnjs, tiles do OpenStreetMap); o
+resto abre offline e deve continuar abrindo.
 
 Scripts de dados (Python 3, só biblioteca padrão), em `dados/sisdepen/`:
 
@@ -76,6 +76,12 @@ python dados/sisdepen/gerar_dados_mapa.py > municipios_mapa.js.txt   # array MUN
   da EACEA. O emblema é a única cor do rodapé e fica como está: não
   recolorir, não recortar, não baixar de 56 px de altura.
 - Segundo `<script>`: Leaflet, dentro de `try/catch` para degradar sem rede.
+- Fundo do mapa: tiles do próprio OpenStreetMap, sem chave, em cinza por
+  filtro CSS (`#mapa-mg .leaflet-tile-pane`). Chave de API não entra no
+  código, porque o repositório é público; foi por isso que a CARTO, que
+  passou a exigir chave, saiu. O OSM recusa pedido sem `Referer`: não
+  apertar a `Referrer-Policy` de `site/_headers` além de
+  `strict-origin-when-cross-origin`. Ver "Ressalva de rede" no `README.md`.
 
 ## Regras de conteúdo
 

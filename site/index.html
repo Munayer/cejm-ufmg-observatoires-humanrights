@@ -543,6 +543,9 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
   border:1px solid var(--fio);
   background:var(--fundo);
 }
+/* Tiles do OpenStreetMap em cinza claro, no preto e branco da página;
+   os pontos ficam fora do filtro, em outro painel do Leaflet. */
+#mapa-mg .leaflet-tile-pane{filter:grayscale(1) opacity(.6)}
 #mapa-mg .leaflet-popup-content-wrapper{
   border-radius:0;
   font-family:var(--sans);
@@ -1145,7 +1148,7 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
       única. Contagens vêm de
       <span class="mono">dados/sisdepen/sisdepen_mg_bruto.csv</span>, mesma base
       do indicador "Direitos penitenciários de mulheres" em Indicadores. Mapa
-      requer rede (tiles CARTO/OpenStreetMap) — o resto da página funciona
+      requer rede (tiles do OpenStreetMap) — o resto da página funciona
       offline.
     </div>
   </aside>
@@ -1315,16 +1318,18 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
   var map = null, pronto = false;
   try {
     map = L.map("mapa-mg", {scrollWheelZoom:false});
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-      subdomains: "abcd",
+    // Tiles do próprio OpenStreetMap, sem chave: a CARTO passou a exigir
+    // chave de API, e chave não entra num repositório público. O cinza
+    // vem do CSS (#mapa-mg .leaflet-tile-pane).
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
       maxZoom: 18,
     }).addTo(map);
     var pontos = MUNICIPIOS.map(function(m){ return [m.lat, m.lon]; });
     map.fitBounds(pontos, {padding:[14,14]});
     pronto = true;
   } catch (e) {
-    elMapa.innerHTML = '<div class="mapa-fallback">O mapa não carregou — sem acesso, daqui, aos tiles do CARTO/OpenStreetMap. Os achados abaixo continuam valendo; abra este arquivo com rede para ver os pontos.</div>';
+    elMapa.innerHTML = '<div class="mapa-fallback">O mapa não carregou — sem acesso, daqui, aos tiles do OpenStreetMap. Os achados abaixo continuam valendo; abra este arquivo com rede para ver os pontos.</div>';
   }
 
   if (pronto) {
