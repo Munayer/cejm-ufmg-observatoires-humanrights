@@ -72,9 +72,13 @@ python dados/sisdepen/gerar_dados_mapa.py > municipios_mapa.js.txt   # array MUN
   `indicadores-*`, `fontes-*`, `evidencia-*`. Uma temática nova segue esse
   padrão e entra também no índice de busca do primeiro `<script>`.
 - Rodapé `footer.rodape-eu`, no fim da coluna central, com o emblema
-  oficial "Cofinanciado pela União Europeia" (`site/assets/eu/`) e o aviso
-  da EACEA. O emblema é a única cor do rodapé e fica como está: não
-  recolorir, não recortar, não baixar de 56 px de altura.
+  oficial "Cofinanciado pela União Europeia" (`site/assets/eu/`), a marca
+  do Centro de Excelência Jean Monnet (`site/assets/cejm/`) e o aviso da
+  EACEA. O emblema fica como está: não recolorir, não recortar, não baixar
+  de 56 px de altura. A marca do CEJM vai ao lado, na mesma altura e nunca
+  maior que o emblema (regra da UE para marcas exibidas com ele);
+  `cejm-pt-pos.png` é o logo colorido do pacote do centro, recortado nas
+  bordas transparentes e reduzido a 168 px de altura (3× os 56 px).
 - Segundo `<script>`: Leaflet, dentro de `try/catch` para degradar sem rede.
 - Fundo do mapa: tiles do próprio OpenStreetMap, sem chave, em cinza por
   filtro CSS (`#mapa-mg .leaflet-tile-pane`). Chave de API não entra no

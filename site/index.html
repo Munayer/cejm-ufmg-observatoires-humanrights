@@ -366,10 +366,12 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
 .rodape-interno li{margin:.3rem 0;font-size:.86rem;color:var(--discreto)}
 
 /* Cofinanciamento da UE. Emblema e aviso são os oficiais, sem modificação;
-   o emblema é a única cor do rodapé, fica longe de outras marcas e tem
-   pelo menos 1 cm de altura (aqui, 56 px). Disposição do rodapé do
-   Observatório SOMA, com flex-wrap no lugar do ponto de quebra: a coluna
-   central muda de largura com as barras laterais, não só com a tela. */
+   o emblema tem pelo menos 1 cm de altura (aqui, 56 px). Ao lado, a marca
+   do Centro de Excelência Jean Monnet, na mesma altura: pelas regras da
+   UE, nenhuma marca exibida com o emblema pode ser maior que ele.
+   Disposição do rodapé do Observatório SOMA, com flex-wrap no lugar do
+   ponto de quebra: a coluna central muda de largura com as barras
+   laterais, não só com a tela. */
 .rodape-financiamento{
   display:flex;
   flex-wrap:wrap;
@@ -378,7 +380,7 @@ td.numero{font-variant-numeric:tabular-nums;text-align:right;padding-right:0}
   padding:1.6rem 0;
   border-top:1px solid var(--fio);
 }
-.emblema-ue{flex:none;display:block;height:56px;width:auto;margin:.5rem 0}
+.emblema-ue,.marca-cejm{flex:none;display:block;height:56px;width:auto;margin:.5rem 0}
 .rodape-financiamento div{flex:1 1 20rem}
 .rodape-financiamento p{margin:0;max-width:70ch;font-size:.86rem;color:var(--discreto)}
 .rodape-financiamento p + p{margin-top:.6rem}
@@ -1118,6 +1120,8 @@ a.lig-oficial::after{content:" \2197";font-size:.82em}
     <div class="rodape-financiamento">
       <img class="emblema-ue" src="assets/eu/co-funded-pt-pos.png"
            alt="Cofinanciado pela União Europeia" width="237" height="56">
+      <img class="marca-cejm" src="assets/cejm/cejm-pt-pos.png"
+           alt="Centro de Excelência Jean Monnet" width="76" height="56">
       <div>
         <p>Cofinanciado pela União Europeia. Os pontos de vista e as opiniões
         expressas são as do(s) autor(es) e não refletem necessariamente a posição

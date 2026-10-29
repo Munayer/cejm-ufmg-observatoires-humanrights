@@ -91,18 +91,21 @@ http(s) — aberta direto do disco (`file://`), o navegador não manda
   vazios das temáticas candidatas.
 - **Rodapé de cofinanciamento da União Europeia** — emblema oficial
   "Cofinanciado pela União Europeia" (`site/assets/eu/co-funded-pt-pos.png`,
-  sem modificação, 56 px de altura, única cor do rodapé), aviso da EACEA e
-  menção às Ações Jean Monnet do programa Erasmus+, como pedem as
-  orientações da Comissão Europeia para beneficiários de financiamento da
-  UE. Mesmo texto do rodapé do Observatório SOMA, com o emblema ao lado do
-  aviso (acima dele quando a coluna fica estreita). O emblema é o único
-  arquivo local que a página carrega além de si mesma.
+  sem modificação, 56 px de altura) e, ao lado, a marca do Centro de
+  Excelência Jean Monnet (`site/assets/cejm/cejm-pt-pos.png`) na mesma
+  altura, nunca maior que o emblema; aviso da EACEA e menção às Ações Jean
+  Monnet do programa Erasmus+, como pedem as orientações da Comissão
+  Europeia para beneficiários de financiamento da UE. Mesmo texto do
+  rodapé do Observatório SOMA, com as marcas ao lado do aviso (acima dele
+  quando a coluna fica estreita). As duas marcas são os únicos arquivos
+  locais que a página carrega além de si mesma.
 
 ## Estrutura do repositório
 
 ```
 site/index.html            -- o produto. Editar direto; não há passo de build.
 site/assets/eu/            -- emblema oficial "Cofinanciado pela União Europeia" do rodapé, sem modificação
+site/assets/cejm/          -- marca do Centro de Excelência Jean Monnet do rodapé, recortada e reduzida
 site/_headers              -- cabeçalhos HTTP do site (formato Netlify, lido pelo Codeberg Pages)
 site/_redirects            -- www.observatoriodhcejm.com redireciona para o domínio principal
 netlify.toml               -- resto da hospedagem anterior no Netlify; sai quando o site lá for apagado
@@ -155,4 +158,6 @@ O emblema em `site/assets/eu/` não entra na licença do projeto: é o
 arquivo oficial da Comissão Europeia (o mesmo do Observatório SOMA, só
 redimensionado), e o seu uso segue as orientações da Comissão para
 beneficiários de financiamento da UE e o acordo administrativo com o
-Conselho da Europa (JO C 271 de 8.9.2012).
+Conselho da Europa (JO C 271 de 8.9.2012). A marca em `site/assets/cejm/`
+também fica fora da licença: é do Centro de Excelência Jean Monnet da
+UFMG.
